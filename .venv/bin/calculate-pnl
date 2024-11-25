@@ -1,6 +1,0 @@
-#!/Users/stanislavstankov/Documents/Dev/python/crypto_tracker/.venv/bin/python
-import sys
-from crypto_tracker.__main__ import calculate_pnl
-
-if __name__ == '__main__':
-    sys.exit(calculate_pnl())
