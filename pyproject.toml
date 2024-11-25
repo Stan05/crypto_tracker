@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "crypto_tracker"
+version = "0.1.0"
+description = ""
+authors = ["Stan05 <stanislav9505@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+binance-connector = "^3.9.0"
+psycopg2-binary = "^2.9.10"
+sqlalchemy = "^2.0.36"
+apscheduler = "^3.10.4"
+discord-py = "^2.4.0"
+
+[tool.poetry.scripts]
+update-trades = "crypto_tracker.__main__:update_trades"
+calculate-pnl = "crypto_tracker.__main__:calculate_pnl"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetrypoe.core.masonry.api"

@@ -1,0 +1,6 @@
+#!/Users/stanislavstankov/Documents/Dev/python/crypto_tracker/.venv/bin/python
+import sys
+from crypto_tracker.__main__ import update_trades
+
+if __name__ == '__main__':
+    sys.exit(update_trades())
