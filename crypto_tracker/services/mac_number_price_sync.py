@@ -38,7 +38,19 @@ class MacNumbersPriceSyncService:
         for coin_metadata in coin_metadata_list:
             if coin_metadata.is_complete():
                 self.logger.info(f"Fetching prices for {coin_metadata}")
-                current_price = self.dex_screener_api.fetch_current_price(coin_metadata.chain, coin_metadata.pair_address)
+                current_price = self.dex_screener_api.fetch_by_chain_and_pair_id(coin_metadata.chain, coin_metadata.pair_address)
+                if not current_price:
+                    pairs = self.dex_screener_api.fetch_by_token_address(coin_metadata.pair_address)
+                    if pairs:
+                        for pair in pairs:
+                            if pair['chainId'] == coin_metadata.chain:
+                                current_price = pair['priceUsd']
+                                break
+
+                if not current_price:
+                    self.logger.warning(f"Could not fetch current price for {coin_metadata.coin}")
+                    continue
+
                 self.logger.info(f'Current price {current_price}')
 
                 # AppleScript to update the Current Price column
