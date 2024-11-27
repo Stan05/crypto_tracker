@@ -1,6 +1,6 @@
 # crypto_tracker/services/wallet_service.py
 from crypto_tracker.models_new import ChainIdType
-from crypto_tracker.repositories_new.database import Database
+from crypto_tracker.database import Database
 from crypto_tracker.repositories_new.models.base import WalletORM
 
 

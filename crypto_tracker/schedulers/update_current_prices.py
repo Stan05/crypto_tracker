@@ -1,8 +1,7 @@
-from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
 from datetime import datetime
-from ..services.service_manager import ServiceManager
+from crypto_tracker.service_manager import ServiceManager
 
 # Define your job function
 def job():

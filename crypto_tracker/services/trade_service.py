@@ -1,4 +1,4 @@
-from ..binance_api_client import BinanceAPIClient
+from ..clients_manager import ClientsManager
 from ..repositories.database import Database
 from ..models import Trade, Symbol, TradePair
 from .pnl_calculator_service import PnlCalculatorService
@@ -8,7 +8,8 @@ from datetime import datetime
 
 class TradeService:
     def __init__(self):
-        self.api_client = BinanceAPIClient()
+        self.clients_manager = ClientsManager()
+        self.api_client = self.clients_manager.binance_api
         self.db = Database()
         self.pnl_calculator_service = PnlCalculatorService()
 

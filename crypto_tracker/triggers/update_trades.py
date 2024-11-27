@@ -1,7 +1,7 @@
 from typing import List
 from ..logger import Logger
 from ..models import Symbol
-from ..services.service_manager import ServiceManager
+from crypto_tracker.service_manager import ServiceManager
 from ..config import Config
 
 logger = Logger()

@@ -1,9 +1,9 @@
 from binance.spot import Spot
-from .config import Config
-from .models import Trade, Symbol
+from crypto_tracker.config import Config
+from crypto_tracker.models import Trade, Symbol
 from typing import List
 from datetime import datetime
-from .utils import to_datetime, to_timestamp_millis
+from crypto_tracker.utils import to_datetime, to_timestamp_millis
 
 class BinanceAPIClient:
     def __init__(self):

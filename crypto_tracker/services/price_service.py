@@ -1,13 +1,14 @@
-from ..binance_api_client import BinanceAPIClient
+from ..clients_manager import ClientsManager
 from ..repositories.database import Database
 from ..models import Symbol, PairPriceSnapshot
 from typing import List
-from datetime import datetime, timedelta
+from datetime import datetime
 from ..utils import is_within_X_minutes
 
 class PriceService:
     def __init__(self):
-        self.api_client = BinanceAPIClient()
+        self.clients_manager = ClientsManager()
+        self.api_client = self.clients_manager.binance_api
         self.db = Database()
 
     def fetch_and_store_current_prices(self):

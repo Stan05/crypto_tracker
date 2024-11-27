@@ -1,9 +1,9 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter
 from pydantic import BaseModel
 
 from ..logger import Logger
 from ..models_new import ChainIdType
-from ..services.service_manager import ServiceManager
+from crypto_tracker.service_manager import ServiceManager
 
 logger = Logger()
 router = APIRouter()

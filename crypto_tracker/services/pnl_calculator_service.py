@@ -1,12 +1,15 @@
+from aiohttp.log import client_logger
+
+from ..clients_manager import ClientsManager
 from ..repositories.database import Database
-from ..binance_api_client import BinanceAPIClient
 from ..models import TradePair, PairPriceSnapshot, Symbol, Trade
 from typing import List
 
 class PnlCalculatorService:
     def __init__(self):
         self.db = Database()
-        self.client = BinanceAPIClient()
+        self.clients_manager = ClientsManager()
+        self.client = self.clients_manager.binance_api
 
     def calculate(self):
         trade_pairs: List[TradePair] = self.db.trade_pair_repo.get_trade_pairs()
