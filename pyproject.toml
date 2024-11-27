@@ -13,6 +13,8 @@ sqlalchemy = "^2.0.36"
 apscheduler = "^3.10.4"
 discord-py = "^2.4.0"
 alembic = "^1.14.0"
+fastapi = "^0.115.5"
+uvicorn = "^0.32.1"
 
 [tool.poetry.scripts]
 update-trades = "crypto_tracker.__main__:update_trades"
