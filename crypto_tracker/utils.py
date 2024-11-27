@@ -21,3 +21,9 @@ def to_timestamp_millis(date: datetime) -> int:
     Converts the datetime to timestamp in miliseconds, used in Binance API Client
     """
     return int(datetime.timestamp(date) * 1000)
+
+def validate_arguments(args: dict, required_args: list):
+    """Validate required arguments."""
+    missing_args = [arg for arg in required_args if not args.get(arg)]
+    if missing_args:
+        raise ValueError(f"Missing required arguments: {', '.join(missing_args)}")
