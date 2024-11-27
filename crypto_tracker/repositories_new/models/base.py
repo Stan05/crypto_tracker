@@ -4,7 +4,7 @@ from datetime import datetime
 
 Base = declarative_base()
 
-class TokenOrm(Base):
+class TokenORM(Base):
     __tablename__ = "tokens"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(50), nullable=False, unique=True)
@@ -33,7 +33,7 @@ class WalletORM(Base):
     created_at = Column(TIMESTAMP, nullable=False, default=datetime.now())
     updated_at = Column(TIMESTAMP, nullable=False, default=datetime.now())
 
-class Trade(Base):
+class TradeORM(Base):
     __tablename__ = "trades"
     id = Column(Integer, primary_key=True, index=True)
     pair_id = Column(Integer, ForeignKey("pairs.id"), nullable=False)
@@ -46,7 +46,7 @@ class Trade(Base):
     created_at = Column(TIMESTAMP, nullable=False, default=datetime.now())
     updated_at = Column(TIMESTAMP, nullable=False, default=datetime.now())
 
-class PriceSnapshot(Base):
+class PriceSnapshotORM(Base):
     __tablename__ = "price_snapshots"
     id = Column(Integer, primary_key=True, index=True)
     pair_id = Column(Integer, ForeignKey("pairs.id"), nullable=False)
