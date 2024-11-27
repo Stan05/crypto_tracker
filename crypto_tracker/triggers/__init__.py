@@ -27,6 +27,7 @@ TRIGGERS = {
         "args": {
             "--address": {"required": True, "help": "Wallet address"},
             "--chain_id": {"required": True, "help": "Blockchain chain ID"},
+            "--name": {"required": True, "help": "The name of the address"},
         },
     },
 }

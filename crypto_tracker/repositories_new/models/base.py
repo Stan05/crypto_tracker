@@ -30,6 +30,7 @@ class WalletORM(Base):
     id = Column(Integer, primary_key=True, index=True)
     address = Column(String(100), nullable=False, unique=True)
     chain_id = Column(String(50), nullable=False)
+    name = Column(String(100), nullable=False, unique=True)
     created_at = Column(TIMESTAMP, nullable=False, default=datetime.now())
     updated_at = Column(TIMESTAMP, nullable=False, default=datetime.now())
 
