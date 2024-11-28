@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, TIMESTAMP, ForeignKey, NUMERIC
+from sqlalchemy import Column, Integer, String, TIMESTAMP, ForeignKey, NUMERIC, UniqueConstraint
 from sqlalchemy.orm import declarative_base
 from datetime import datetime
 
@@ -28,11 +28,15 @@ class PairORM(Base):
 class WalletORM(Base):
     __tablename__ = "wallets"
     id = Column(Integer, primary_key=True, index=True)
-    address = Column(String(100), nullable=False, unique=True)
+    address = Column(String(100), nullable=False)
     chain_id = Column(String(50), nullable=False)
-    name = Column(String(100), nullable=False, unique=True)
+    name = Column(String(100), nullable=False)
     created_at = Column(TIMESTAMP, nullable=False, default=datetime.now())
     updated_at = Column(TIMESTAMP, nullable=False, default=datetime.now())
+
+    __table_args__ = (
+        UniqueConstraint("address", "chain_id", name="uq_address_chain_id"),
+    )
 
 class TradeORM(Base):
     __tablename__ = "trades"
