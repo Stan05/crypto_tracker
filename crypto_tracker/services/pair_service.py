@@ -8,10 +8,10 @@ class PairService:
         self.db = Database()
 
     def add_pair(self, pair:PairORM) -> PairORM:
-        return self.db.trade_repo.create(pair)
+        return self.db.pair_repo.create(pair)
 
     def get_pairs(self) -> [PairORM]:
-        return self.db.trade_repo.get_all()
+        return self.db.pair_repo.get_all()
 
-    def get_pair(self, trade_id: int) -> PairORM:
-        return self.db.trade_repo.get_by_id(trade_id)
+    def get_pair(self, pair_id: int) -> PairORM:
+        return self.db.pair_repo.get_by_id(pair_id)
