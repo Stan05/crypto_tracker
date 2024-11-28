@@ -13,15 +13,15 @@ router = APIRouter()
 service_manager = ServiceManager()
 
 class PairRequest(BaseModel):
-    symbol: str
+
     base_token_id: int
     quote_token_id: int
     chain_id: ChainIdType
     dex_id: DexIdType
     pair_address: str
+
     def to_orm(self) -> PairORM:
         return PairORM(
-            symbol=self.symbol,
             base_token_id=self.base_token_id,
             quote_token_id=self.quote_token_id,
             chain_id=self.chain_id.name,
@@ -57,9 +57,9 @@ def add_pair(request: PairRequest):
     """
     Add a new pair.
     """
-    logger.info(f"Creating pair {request.symbol} on chain {request.chain_id}")
+    logger.info(f"Creating pair on chain {request.chain_id}")
     new_pair = service_manager.pair_service.add_pair(request.to_orm())
-    logger.info(f"Pair {request.symbol} successfully added")
+    logger.info(f"Pair {new_pair.symbol} successfully added")
     return PairResponse.from_orm(new_pair)
 
 

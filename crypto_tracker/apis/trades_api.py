@@ -53,7 +53,7 @@ class TradeResponse(BaseModel):
             usd_price=obj.usd_price,
             quantity=obj.quantity,
             trade_timestamp=obj.trade_timestamp.isoformat(),
-            wallet_id=obj.wallet_id,
+            wallet_id=obj.wallet,
         )
 
 
