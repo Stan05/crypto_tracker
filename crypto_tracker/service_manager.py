@@ -1,5 +1,5 @@
 # crypto_tracker/services/service_manager.py
-
+from crypto_tracker.services.pair_service import PairService
 from crypto_tracker.services.price_service import PriceService
 from crypto_tracker.services.trade_service import TradeService
 from crypto_tracker.services.trade_service_legacy import TradeServiceLegacy
@@ -17,4 +17,5 @@ class ServiceManager:
         self.mac_numbers_price_sync = MacNumbersPriceSyncService()
         self.wallet_service = WalletService()
         self.trade_service = TradeService()
+        self.pair_service = PairService()
 

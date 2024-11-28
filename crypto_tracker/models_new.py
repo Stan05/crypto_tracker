@@ -2,9 +2,7 @@
 
 from enum import Enum
 
-class TradeType(Enum):
-    BUY = "buy"
-    SELL = "sell"
+class BaseEnum(Enum):
 
     @classmethod
     def from_name(cls, name: str):
@@ -13,14 +11,17 @@ class TradeType(Enum):
         except KeyError:
             raise ValueError(f"{name} is not a valid {cls.__name__}")
 
-class ChainIdType(Enum):
+class TradeType(BaseEnum):
+    BUY = "buy"
+    SELL = "sell"
+
+
+class ChainIdType(BaseEnum):
     ETHEREUM = "ethereum"
     BASE = "base"
     SOLANA = "solana"
 
-    @classmethod
-    def from_name(cls, name: str):
-        try:
-            return cls[name.upper()]  # Convert to uppercase for case-insensitive matching
-        except KeyError:
-            raise ValueError(f"{name} is not a valid {cls.__name__}")
+class DexIdType(BaseEnum):
+    UNISWAP = "uniswap"
+    KYBERSWAP = "kyberswap"
+    MATCHA = "matcha"
