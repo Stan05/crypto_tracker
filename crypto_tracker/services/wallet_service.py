@@ -12,3 +12,8 @@ class WalletService:
         wallet: WalletORM = WalletORM(address=wallet_address, chain_id=chain_id.name, name=name)
         return self.db.wallet_repo.create(wallet)
 
+    def get_wallets(self) -> [WalletORM]:
+        return self.db.wallet_repo.get_all()
+
+    def get_wallet(self, wallet_id: int) -> WalletORM:
+        return self.db.wallet_repo.get_by_id(wallet_id)

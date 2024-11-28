@@ -1,9 +1,12 @@
-from fastapi import APIRouter
+from typing import Any, Self
+
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
 from ..logger import Logger
 from ..models_new import ChainIdType
 from crypto_tracker.service_manager import ServiceManager
+from ..repositories_new.models.base import WalletORM
 
 logger = Logger()
 router = APIRouter()
@@ -17,8 +20,13 @@ class WalletRequest(BaseModel):
 
 class WalletResponse(BaseModel):
     id: int
+    name: str
     address: str
     chain_id: str
+
+    @classmethod
+    def from_orm(cls, obj: WalletORM) -> Self:
+        return WalletResponse(id=obj.id, name=obj.name, address=obj.address, chain_id=obj.chain_id)
 
 
 @router.post("/wallets", response_model=WalletResponse)
@@ -35,31 +43,29 @@ def add_wallet(request: WalletRequest):
     logger.info(f"Creating wallet with name {request.name} for chain {request.chain_id} with address {request.address}")
     new_wallet = service_manager.wallet_service.add_wallet(wallet_address=request.address, chain_id=ChainIdType.from_name(request.chain_id), name=request.name)
     logger.info(f"Wallet successfully added")
-    return WalletResponse(id=new_wallet.id, address=new_wallet.address, chain_id=new_wallet.chain_id)
+    return WalletResponse.from_orm(new_wallet)
 
-"""
+
 @router.get("/wallets", response_model=list[WalletResponse])
-def get_wallets(db: Session = Depends(get_db)):
-    \"""
+def get_wallets():
+    """
     Retrieve all wallets.
-    \"""
-    wallet_repo = WalletRepository(db)
-    wallets = wallet_repo.get_all()
-    return [WalletResponse(id=w.id, address=w.address, chain_id=w.chain_id) for w in wallets]
+    """
+    wallets = service_manager.wallet_service.get_wallets()
+    return [WalletResponse.from_orm(w) for w in wallets]
 
 
 @router.get("/wallets/{wallet_id}", response_model=WalletResponse)
-def get_wallet(wallet_id: int, db: Session = Depends(get_db)):
-    \"""
+def get_wallet(wallet_id: int):
+    """
     Retrieve a single wallet by ID.
-    \"""
-    wallet_repo = WalletRepository(db)
-    wallet = wallet_repo.get_by_id(wallet_id)
+    """
+    wallet = service_manager.wallet_service.get_wallet(wallet_id)
     if not wallet:
         raise HTTPException(status_code=404, detail="Wallet not found")
-    return WalletResponse(id=wallet.id, address=wallet.address, chain_id=wallet.chain_id)
+    return WalletResponse.from_orm(wallet)
 
-
+"""
 @router.delete("/wallets/{wallet_id}")
 def delete_wallet(wallet_id: int, db: Session = Depends(get_db)):
     \"""

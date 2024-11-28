@@ -1,7 +1,7 @@
 # crypto_tracker/repositories_new/base_repository.py
 
 from sqlalchemy.orm import Session
-from typing import Type, TypeVar, Generic
+from typing import Type, TypeVar, Generic, List
 
 T = TypeVar('T')  # Generic type for SQLAlchemy models
 
@@ -17,9 +17,13 @@ class BaseRepository(Generic[T]):
         self.db_session.refresh(obj)
         return obj
 
-    def get_by_id(self, id: int) -> T:
+    def get_by_id(self, entity_id: int) -> T:
         """Retrieve a record by ID."""
-        return self.db_session.query(self.model).filter(self.model.id == id).first()
+        return self.db_session.query(self.model).filter(self.model.id == entity_id).first()
+
+    def get_all(self) -> List[T]:
+        """Retrieve all records."""
+        return self.db_session.query(self.model).all()
 
     def commit(self):
         self.db_session.commit()
