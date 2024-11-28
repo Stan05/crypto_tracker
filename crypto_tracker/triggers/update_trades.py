@@ -20,8 +20,8 @@ def update_trades():
 
     for symbol in trading_symbols:
         logger.info(f'Updating trades for {symbol}')
-        service_manager.trade_service.fetch_and_store_trades(symbol)
+        service_manager.trade_service_legacy.fetch_and_store_trades(symbol)
 
         logger.info(f'Updating pair for {symbol}')
-        service_manager.trade_service.update_trade_pair(symbol)
+        service_manager.trade_service_legacy.update_trade_pair(symbol)
     logger.info("Trades updated successfully!")
