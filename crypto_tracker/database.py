@@ -1,10 +1,10 @@
-# crypto_tracker/repositories_new/database.py
-from crypto_tracker.repositories_new.models.base import Base
-from crypto_tracker.repositories_new.pair_repository import PairRepository
-from crypto_tracker.repositories_new.price_snapshot_repository import PriceSnapshotRepository
-from crypto_tracker.repositories_new.token_repository import TokenRepository
-from crypto_tracker.repositories_new.trade_repository import TradeRepository
-from crypto_tracker.repositories_new.wallet_repository import WalletRepository
+# crypto_tracker/repositories/database.py
+from crypto_tracker.repositories.models.base import Base
+from crypto_tracker.repositories.pair_repository import PairRepository
+from crypto_tracker.repositories.price_snapshot_repository import PriceSnapshotRepository
+from crypto_tracker.repositories.token_repository import TokenRepository
+from crypto_tracker.repositories.trade_repository import TradeRepository
+from crypto_tracker.repositories.wallet_repository import WalletRepository
 from crypto_tracker.config import Config
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker

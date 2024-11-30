@@ -5,8 +5,8 @@ from pydantic import BaseModel
 
 from ..logger import Logger
 from crypto_tracker.service_manager import ServiceManager
-from ..models_new import ChainIdType, DexIdType
-from ..repositories_new.models.base import PairORM
+from ..models import ChainIdType, DexIdType
+from ..repositories.models.base import PairORM
 
 logger = Logger()
 router = APIRouter()

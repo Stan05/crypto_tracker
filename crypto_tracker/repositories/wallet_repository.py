@@ -1,4 +1,4 @@
-# crypto_tracker/repositories_new/trades_repository.py
+# crypto_tracker/repositories/trades_repository.py
 from .base_repository import BaseRepository
 from .models.base import WalletORM
 from sqlalchemy.orm import Session

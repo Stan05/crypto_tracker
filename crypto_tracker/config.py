@@ -41,3 +41,6 @@ class Config:
                         continue
                     supported_coin_list.append(line)
         self.SUPPORTED_COIN_LIST = supported_coin_list
+
+        # Alchemy
+        self.ALCHEMY_BASE_URL = os.environ.get("ALCHEMY_BASE_URL") or config.get(USER_CFG_SECTION, "ALCHEMY_BASE_URL")

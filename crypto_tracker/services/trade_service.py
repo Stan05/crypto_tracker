@@ -1,6 +1,6 @@
 # crypto_tracker/services/wallet_service.py
 from crypto_tracker.database import Database
-from crypto_tracker.repositories_new.models.base import TradeORM
+from crypto_tracker.repositories.models.base import TradeORM
 
 
 class TradeService:

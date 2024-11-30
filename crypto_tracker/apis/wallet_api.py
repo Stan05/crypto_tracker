@@ -4,9 +4,9 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
 from ..logger import Logger
-from ..models_new import ChainIdType
+from ..models import ChainIdType
 from crypto_tracker.service_manager import ServiceManager
-from ..repositories_new.models.base import WalletORM
+from ..repositories.models.base import WalletORM
 
 logger = Logger()
 router = APIRouter()

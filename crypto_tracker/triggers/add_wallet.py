@@ -1,6 +1,6 @@
 
 from ..logger import Logger
-from ..models_new import ChainIdType
+from ..models import ChainIdType
 from crypto_tracker.service_manager import ServiceManager
 
 logger = Logger()
