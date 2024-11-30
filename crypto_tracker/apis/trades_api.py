@@ -57,7 +57,7 @@ class TradeResponse(BaseModel):
         )
 
 
-@router.post("/trades", response_model=TradeResponse)
+@router.post("/", response_model=TradeResponse)
 def add_trade(request: TradeRequest):
     """
     Add a new trade.
@@ -68,7 +68,7 @@ def add_trade(request: TradeRequest):
     return TradeResponse.from_orm(new_trade)
 
 
-@router.get("/trades", response_model=list[TradeResponse])
+@router.get("/", response_model=list[TradeResponse])
 def get_trades():
     """
     Retrieve all trades.
@@ -78,7 +78,7 @@ def get_trades():
     return [TradeResponse.from_orm(t) for t in trades]
 
 
-@router.get("/trades/{trade_id}", response_model=TradeResponse)
+@router.get("/{trade_id}", response_model=TradeResponse)
 def get_trade(trade_id: int):
     """
     Retrieve a single trade by ID.

@@ -52,7 +52,7 @@ class PairResponse(BaseModel):
         )
 
 
-@router.post("/pairs", response_model=PairResponse)
+@router.post("/", response_model=PairResponse)
 def add_pair(request: PairRequest):
     """
     Add a new pair.
@@ -63,7 +63,7 @@ def add_pair(request: PairRequest):
     return PairResponse.from_orm(new_pair)
 
 
-@router.get("/pairs", response_model=list[PairResponse])
+@router.get("/", response_model=list[PairResponse])
 def get_pairs():
     """
     Retrieve all pairs.
@@ -73,7 +73,7 @@ def get_pairs():
     return [PairResponse.from_orm(p) for p in pairs]
 
 
-@router.get("/pairs/{pair_id}", response_model=PairResponse)
+@router.get("/{pair_id}", response_model=PairResponse)
 def get_pair(pair_id: int):
     """
     Retrieve a single pair by ID.

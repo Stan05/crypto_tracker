@@ -29,7 +29,7 @@ class WalletResponse(BaseModel):
         return WalletResponse(id=obj.id, name=obj.name, address=obj.address, chain_id=obj.chain_id)
 
 
-@router.post("/wallets", response_model=WalletResponse)
+@router.post("/", response_model=WalletResponse)
 def add_wallet(request: WalletRequest):
     """
     Add a new wallet.
@@ -46,7 +46,7 @@ def add_wallet(request: WalletRequest):
     return WalletResponse.from_orm(new_wallet)
 
 
-@router.get("/wallets", response_model=list[WalletResponse])
+@router.get("/", response_model=list[WalletResponse])
 def get_wallets():
     """
     Retrieve all wallets.
@@ -55,7 +55,7 @@ def get_wallets():
     return [WalletResponse.from_orm(w) for w in wallets]
 
 
-@router.get("/wallets/{wallet_id}", response_model=WalletResponse)
+@router.get("/{wallet_id}", response_model=WalletResponse)
 def get_wallet(wallet_id: int):
     """
     Retrieve a single wallet by ID.

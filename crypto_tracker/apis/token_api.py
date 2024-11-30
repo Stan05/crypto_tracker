@@ -41,7 +41,7 @@ class TokenResponse(BaseModel):
         )
 
 
-@router.post("/tokens", response_model=TokenResponse)
+@router.post("/", response_model=TokenResponse)
 def add_token(request: TokenRequest):
     """
     Add a new token.
@@ -52,7 +52,7 @@ def add_token(request: TokenRequest):
     return TokenResponse.from_orm(new_token)
 
 
-@router.get("/tokens", response_model=list[TokenResponse])
+@router.get("/", response_model=list[TokenResponse])
 def get_tokens():
     """
     Retrieve all tokens.
@@ -62,7 +62,7 @@ def get_tokens():
     return [TokenResponse.from_orm(t) for t in tokens]
 
 
-@router.get("/tokens/{token_id}", response_model=TokenResponse)
+@router.get("/{token_id}", response_model=TokenResponse)
 def get_token(token_id: int):
     """
     Retrieve a single token by ID.
