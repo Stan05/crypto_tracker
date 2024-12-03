@@ -7,8 +7,9 @@ from pydantic import BaseModel
 
 # Define a generic type for the response model
 T = TypeVar("T", bound=BaseModel)
+K = TypeVar("K")
 
-class GraphProtocolConnector(ABC, Generic[T]):
+class GraphProtocolConnector(ABC, Generic[T, K]):
     def __init__(self, graphql_endpoint: str):
         """
         Initialize the GraphQL client with the provided endpoint.
@@ -31,7 +32,7 @@ class GraphProtocolConnector(ABC, Generic[T]):
         pass
 
     @abstractmethod
-    def get_response_model(self) -> Type[T]:
+    def get_response_model_type(self) -> Type[T]:
         """
         Abstract method to define the Pydantic model for parsing the response.
         Must be implemented by subclasses.
@@ -41,7 +42,31 @@ class GraphProtocolConnector(ABC, Generic[T]):
         """
         pass
 
-    async def _async_fetch(self, variables: Dict[str, Any]) -> T:
+    @abstractmethod
+    def get_model_type(self) -> Type[K]:
+        """
+        Abstract method to define the internal model to parse the response to.
+        Must be implemented by subclasses.
+
+        Returns:
+            Type[K]: The internal model class.
+        """
+        pass
+
+    @abstractmethod
+    def transform_response(self, response: T) -> K:
+        """
+        Transform the parsed Pydantic response model into the internal model type.
+
+        Args:
+            response (T): The parsed Pydantic response model.
+
+        Returns:
+            K: The transformed internal model instance.
+        """
+        pass
+
+    async def _async_fetch(self, variables: Dict[str, Any]) -> K:
         """
         Asynchronous method to execute the query and return the parsed response.
 
@@ -55,10 +80,11 @@ class GraphProtocolConnector(ABC, Generic[T]):
         async with self.client as session:
             response = await session.execute(query, variable_values=variables)
             print(response)
-            response_model = self.get_response_model()
-            return response_model.model_validate(response)
+            response_model = self.get_response_model_type()
+            pydantic_model = response_model.model_validate(response)
+            return self.transform_response(pydantic_model)
 
-    def fetch(self, variables: Dict[str, Any]) -> T:
+    def fetch(self, variables: Dict[str, Any]) -> K:
         """
         Synchronous method to execute the query and return the parsed response.
 

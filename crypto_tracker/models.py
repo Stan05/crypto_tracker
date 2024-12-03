@@ -85,3 +85,26 @@ class TransactionStatusType(BaseEnum):
 class TransactionResponseType(BaseEnum):
     GRT_UNISWAP_V3_BASE = "Base.Uniswap-V3.Subgraph"
     KYBERSWAP_BASE = "KyberSwap.Subgraph"
+
+class Token:
+    def __init__(self, address, name, symbol):
+        self.address:str = address
+        self.name:str = name
+        self.symbol:str = symbol
+
+class Swap:
+    def __init__(self, base_token_amount, quote_token_amount, amount_USD, origin, base_token, quote_token, timestamp, pool_id):
+        self.base_token_amount:float = base_token_amount
+        self.quote_token_amount:float = quote_token_amount
+        self.amount_USD:float = amount_USD
+        self.origin: str = origin
+        self.base_token: Token = base_token
+        self.quote_token: Token = quote_token
+        self.timestamp: datetime = timestamp
+        self.pool_id: str = pool_id
+
+class Transaction:
+    def __init__(self, id, swap, payload):
+        self.id: str = id
+        self.swap: Swap = swap
+        self.payload = payload

@@ -20,12 +20,12 @@ class QueryTxnResponse(BaseModel):
 
 
 @router.post("/", response_model=QueryTxnResponse)
-def query_transaction(request: QueryTxnRequest):
+def process_transaction(request: QueryTxnRequest):
     """
     Add a new trade.
     """
     logger.info(f"Querying txn {request.txn_id} on chain {request.chain_id} from dex {request.dex_id}")
-    service_manager.transaction_service.query_txn(request.txn_id, request.chain_id, request.dex_id)
+    service_manager.transaction_service.process_transaction(request.txn_id, request.chain_id, request.dex_id)
     logger.info("Transaction successfully processed")
     return QueryTxnResponse(id=1)
 
