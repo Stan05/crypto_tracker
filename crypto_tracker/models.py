@@ -76,3 +76,12 @@ class DexIdType(BaseEnum):
     UNISWAP = "uniswap"
     KYBERSWAP = "kyberswap"
     MATCHA = "matcha"
+
+class TransactionStatusType(BaseEnum):
+    PENDING = "PENDING"
+    PROCESSED = "PROCESSED"
+    FAILED = "FAILED"
+
+class TransactionResponseType(BaseEnum):
+    GRT_UNISWAP_V3_BASE = "Base.Uniswap-V3.Subgraph"
+    KYBERSWAP_BASE = "KyberSwap.Subgraph"

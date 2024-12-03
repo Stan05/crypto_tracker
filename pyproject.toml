@@ -17,6 +17,7 @@ fastapi = "^0.115.5"
 uvicorn = "^0.32.1"
 web3 = "^7.6.0"
 pydantic = "^2.10.2"
+gql = "^3.5.0"
 
 [tool.poetry.scripts]
 update-trades = "crypto_tracker.__main__:update_trades"

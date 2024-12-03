@@ -13,13 +13,11 @@ class TokenService:
         return self.db.token_repo.create(token)
 
     def add_token_if_not_exists(self, token:TokenORM) -> TokenORM:
-        self.logger.info(f"Checking {token.name}, {token.symbol}, {token.address}")
-        if not self.db.token_repo.exists(token.address):
-            self.logger.info(f'Token {token.id} does not exist creating it')
-
+        existing_token = self.db.token_repo.get_token_by_address(token.address)
+        if not existing_token:
+            self.logger.info(f'Token {token.name} does not exist creating it')
             return self.db.token_repo.create(token)
-
-        return token
+        return existing_token
 
     def get_tokens(self) -> [TokenORM]:
         return self.db.token_repo.get_all()

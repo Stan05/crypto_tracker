@@ -67,11 +67,12 @@ class MacNumbersPriceSyncService:
                                 end tell
                             '''
                 result = subprocess.run(["osascript", "-e", apple_script], capture_output=True, text=True)
+                time.sleep(0.5)  # Adjust the delay as needed
                 if result.stderr:
                     self.logger.error(f"Error updating price for {coin_metadata.coin}: {result.stderr.encode('utf-8')}")
                 else:
                     self.logger.info(f"Successfully updated price for {coin_metadata.coin}")
-            time.sleep(1)  # Adjust the delay as needed
+
 
     def update_altcoins_file(self):
         self.logger.info('Fetching symbols from Numbers...')
@@ -111,7 +112,7 @@ class MacNumbersPriceSyncService:
                 self.logger.error(f"Error fetching/updating price for {symbol}: {e}")
 
             # Delay between API calls
-            time.sleep(1)  # Adjust the delay as needed
+            time.sleep(0.5)  # Adjust the delay as needed
 
     def fetch_symbols_from_altcoins(self):
         # AppleScript to read symbols from column A

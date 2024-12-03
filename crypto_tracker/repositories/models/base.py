@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, TIMESTAMP, ForeignKey, NUMERIC, UniqueConstraint
+from sqlalchemy import Column, Integer, String, TIMESTAMP, ForeignKey, NUMERIC, UniqueConstraint, false
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import declarative_base
 from datetime import datetime
 
@@ -48,6 +49,7 @@ class TradeORM(Base):
     quantity = Column(NUMERIC, nullable=False)
     trade_timestamp = Column(TIMESTAMP, nullable=False)
     wallet = Column(Integer, ForeignKey("wallets.id"), nullable=False)
+    txn_id = Column(Integer, ForeignKey("transactions.id"))
     created_at = Column(TIMESTAMP, nullable=False, default=datetime.now())
     updated_at = Column(TIMESTAMP, nullable=False, default=datetime.now())
 
@@ -60,5 +62,15 @@ class PriceSnapshotORM(Base):
     market_cap = Column(NUMERIC, nullable=False)
     fdv = Column(NUMERIC, nullable=False)
     snapshot_timestamp = Column(TIMESTAMP, nullable=False)
+    created_at = Column(TIMESTAMP, nullable=False, default=datetime.now())
+    updated_at = Column(TIMESTAMP, nullable=False, default=datetime.now())
+
+class TransactionORM(Base):
+    __tablename__ = "transactions"
+    id = Column(Integer, primary_key=True, index=True)
+    hash = Column(String(150), nullable=False, index=True, unique=True)
+    payload = Column(JSONB, nullable=False)
+    type = Column(String(100), nullable=False)
+    status = Column(String(15), nullable=False)
     created_at = Column(TIMESTAMP, nullable=False, default=datetime.now())
     updated_at = Column(TIMESTAMP, nullable=False, default=datetime.now())

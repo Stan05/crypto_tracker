@@ -44,3 +44,6 @@ class Config:
 
         # Alchemy
         self.ALCHEMY_BASE_URL = os.environ.get("ALCHEMY_BASE_URL") or config.get(USER_CFG_SECTION, "ALCHEMY_BASE_URL")
+
+        # GRT Protocol
+        self.GRAPH_UNISWAP_V3_URL = os.environ.get("GRAPH_UNISWAP_V3_URL") or config.get(USER_CFG_SECTION, "GRAPH_UNISWAP_V3_URL")
