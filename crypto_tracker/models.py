@@ -114,17 +114,29 @@ class Transaction:
         self.payload = payload
 
 class AggregatedTrade:
-    def __init__(self, pair_id, pair, total_bought_quantity, average_buy_native_price, average_buy_USD_price,
-                 total_sold_quantity, average_sell_native_price, average_sell_USD_price):
+    def __init__(self, pair_id, pair, total_buy_quantity, total_buy_native_value, total_buy_usd_value,
+                 total_sell_quantity, total_sell_native_value, total_sell_usd_value):
         self.pair_id: int = pair_id
         self.pair: str = pair
 
-        self.total_bought_quantity: float = total_bought_quantity
-        self.average_buy_native_price: float = average_buy_native_price
-        self.average_buy_USD_price: float = average_buy_USD_price
+        self.total_buy_quantity: float = total_buy_quantity
+        self.total_buy_native_value: float = total_buy_native_value
+        self.total_buy_usd_value: float = total_buy_usd_value
 
-        self.total_sold_quantity: float = total_sold_quantity
-        self.average_sell_native_price: float = average_sell_native_price
-        self.average_sell_USD_price: float = average_sell_USD_price
+        self.total_sell_quantity: float = total_sell_quantity
+        self.total_sell_native_value: float = total_sell_native_value
+        self.total_sell_usd_value: float = total_sell_usd_value
 
+    def __repr__(self):
+        return (
+            f"AggregatedTrade("
+            f"pair_id={self.pair_id}, "
+            f"pair='{self.pair}', "
+            f"total_buy_quantity={self.total_buy_quantity}, "
+            f"total_buy_native_value={self.total_buy_native_value}, "
+            f"total_buy_usd_value={self.total_buy_usd_value}, "
+            f"total_sell_quantity={self.total_sell_quantity}, "
+            f"total_sell_native_value={self.total_sell_native_value}, "
+            f"total_sell_usd_value={self.total_sell_usd_value})"
+        )
 

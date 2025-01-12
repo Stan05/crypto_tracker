@@ -43,23 +43,49 @@ def add_pair():
     logger.info(f'Agg trades {agg_trades}')
 
     agg_trades_response = []
-    for agg_trade in agg_trades:
-        available_quantity = agg_trade.total_bought_quantity - agg_trade.total_sold_quantity
+    for raw_trade in agg_trades:
+        # Extract raw values
+        pair = raw_trade.pair
+        total_buy_quantity = raw_trade.total_buy_quantity
+        total_buy_native_value = raw_trade.total_buy_native_value
+        total_buy_usd_value = raw_trade.total_buy_usd_value
+        total_sell_quantity = raw_trade.total_sell_quantity
+        total_sell_native_value = raw_trade.total_sell_native_value
+        total_sell_usd_value = raw_trade.total_sell_usd_value
+
+        # Avoid division by zero
+        average_buy_native_price = (
+            total_buy_native_value / total_buy_quantity
+            if total_buy_quantity > 0
+            else 0
+        )
+        average_buy_usd_price = (
+            total_buy_usd_value / total_buy_quantity
+            if total_buy_quantity > 0
+            else 0
+        )
+        average_sell_native_price = (
+            total_sell_native_value / total_sell_quantity
+            if total_sell_quantity > 0
+            else 0
+        )
+        average_sell_usd_price = (
+            total_sell_usd_value / total_sell_quantity
+            if total_sell_quantity > 0
+            else 0
+        )
 
         # Calculate PNL
-        total_investment_native = agg_trade.total_bought_quantity * agg_trade.average_buy_native_price
-        total_investment_USD = agg_trade.total_bought_quantity * agg_trade.average_buy_USD_price
-
-        total_sold_native = agg_trade.total_sold_quantity * agg_trade.average_sell_native_price
-        total_sold_USD = agg_trade.total_sold_quantity * agg_trade.average_sell_USD_price
-
-        pnl_native = total_sold_native - total_investment_native
-        pnl_USD = total_sold_USD - total_investment_USD
-        pnl_percent = (pnl_USD / total_investment_USD * 100) if total_investment_USD > 0 else 0
+        pnl_native = total_sell_native_value - total_buy_native_value
+        pnl_usd = total_sell_usd_value - total_buy_usd_value
+        pnl_percent = (
+            (pnl_usd / total_buy_usd_value) * 100 if total_buy_usd_value > 0 else 0
+        )
 
         # Determine status
+        available_quantity = total_buy_quantity - total_sell_quantity
         if available_quantity > 0:
-            if total_sold_USD >= total_investment_USD:
+            if total_sell_usd_value >= total_buy_usd_value:
                 status = TradeStatus.MOON_BAG
             else:
                 status = TradeStatus.IN_TRADE
@@ -69,21 +95,21 @@ def add_pair():
         # Add to response
         agg_trades_response.append(
             AggTrade(
-                pair_id=agg_trade.pair_id,
-                pair=agg_trade.pair,
+                pair_id=raw_trade.pair_id,
+                pair=pair,
                 available_quantity=available_quantity,
 
-                total_bought_quantity=agg_trade.total_bought_quantity,
-                average_buy_native_price=agg_trade.average_buy_native_price,
-                average_buy_USD_price=agg_trade.average_buy_USD_price,
+                total_bought_quantity=total_buy_quantity,
+                average_buy_native_price=average_buy_native_price,
+                average_buy_USD_price=average_buy_usd_price,
 
-                total_sold_quantity=agg_trade.total_sold_quantity,
-                average_sell_native_price=agg_trade.average_sell_native_price,
-                average_sell_USD_price=agg_trade.average_sell_USD_price,
+                total_sold_quantity=total_sell_quantity,
+                average_sell_native_price=average_sell_native_price,
+                average_sell_USD_price=average_sell_usd_price,
 
                 pnl_percent=pnl_percent,
                 pnl_native=pnl_native,
-                pnl_USD=pnl_USD,
+                pnl_USD=pnl_usd,
 
                 status=status,
             )

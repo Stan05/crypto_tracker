@@ -36,53 +36,32 @@ class TradeRepository(BaseRepository[TradeORM]):
             self.db_session.query(
                 PairORM.id,
                 PairORM.symbol.label("pair"),
-                # Calculate Buy Quantities
                 func.sum(
                     case((TradeORM.trade_type == TradeType.BUY.name, TradeORM.quantity), else_=0)
-                ).label("buy_quantity"),
-                # Average Buy Native Price
-                (
-                        func.sum(
-                            case((TradeORM.trade_type == TradeType.BUY.name, TradeORM.native_price * TradeORM.quantity),
-                                 else_=0)
-                        ) / func.sum(
-                    case((TradeORM.trade_type == TradeType.BUY.name, TradeORM.quantity), else_=0)
-                )
-                ).label("avg_buy_native_price"),
-                # Average Buy USD Price
-                (
-                        func.sum(
-                            case((TradeORM.trade_type == TradeType.BUY.name, TradeORM.usd_price * TradeORM.quantity),
-                                 else_=0)
-                        ) / func.sum(
-                    case((TradeORM.trade_type == TradeType.BUY.name, TradeORM.quantity), else_=0)
-                )
-                ).label("avg_buy_usd_price"),
-                # Calculate Sell Quantities
+                ).label("total_buy_quantity"),
+                func.sum(
+                    case((TradeORM.trade_type == TradeType.BUY.name, TradeORM.native_price * TradeORM.quantity),
+                         else_=0)
+                ).label("total_buy_native_value"),
+                func.sum(
+                    case((TradeORM.trade_type == TradeType.BUY.name, TradeORM.usd_price * TradeORM.quantity), else_=0)
+                ).label("total_buy_usd_value"),
                 func.abs(
                     func.sum(
                         case((TradeORM.trade_type == TradeType.SELL.name, TradeORM.quantity), else_=0)
                     )
-                ).label("sell_quantity"),
-                # Average Sell Native Price
-                (
-                        func.sum(
-                            case(
-                                (TradeORM.trade_type == TradeType.SELL.name, TradeORM.native_price * TradeORM.quantity),
-                                else_=0)
-                        ) / func.sum(
-                    case((TradeORM.trade_type == TradeType.SELL.name, TradeORM.quantity), else_=0)
-                )
-                ).label("avg_sell_native_price"),
-                # Average Sell USD Price
-                (
-                        func.sum(
-                            case((TradeORM.trade_type == TradeType.SELL.name, TradeORM.usd_price * TradeORM.quantity),
-                                 else_=0)
-                        ) / func.sum(
-                    case((TradeORM.trade_type == TradeType.SELL.name, TradeORM.quantity), else_=0)
-                )
-                ).label("avg_sell_usd_price"),
+                ).label("total_sell_quantity"),
+                func.abs(
+                    func.sum(
+                        case((TradeORM.trade_type == TradeType.SELL.name, TradeORM.native_price * TradeORM.quantity),
+                            else_=0)
+                    )
+                ).label("total_sell_native_value"),
+                func.abs(
+                    func.sum(
+                        case((TradeORM.trade_type == TradeType.SELL.name, TradeORM.usd_price * TradeORM.quantity), else_=0)
+                    )
+                ).label("total_sell_usd_value"),
             )
             .join(PairORM, PairORM.id == TradeORM.pair_id)
             .group_by(PairORM.id, PairORM.symbol)
@@ -96,12 +75,12 @@ class TradeRepository(BaseRepository[TradeORM]):
             AggregatedTrade(
                 pair_id=row.id,
                 pair=row.pair,
-                total_bought_quantity=row.buy_quantity,
-                average_buy_native_price=row.avg_buy_native_price,
-                average_buy_USD_price=row.avg_buy_usd_price,
-                total_sold_quantity=row.sell_quantity,
-                average_sell_native_price=row.avg_sell_native_price,
-                average_sell_USD_price=row.avg_sell_usd_price,
+                total_buy_quantity=row.total_buy_quantity,
+                total_buy_native_value=row.total_buy_native_value,
+                total_buy_usd_value=row.total_buy_usd_value,
+                total_sell_quantity=row.total_sell_quantity,
+                total_sell_native_value=row.total_sell_native_value,
+                total_sell_usd_value=row.total_sell_usd_value,
             )
             for row in results
         ]
