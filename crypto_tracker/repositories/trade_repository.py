@@ -34,6 +34,7 @@ class TradeRepository(BaseRepository[TradeORM]):
     def get_aggregated_trade_data(self):
         query = (
             self.db_session.query(
+                PairORM.id,
                 PairORM.symbol.label("pair"),
                 # Calculate Buy Quantities
                 func.sum(
@@ -84,7 +85,7 @@ class TradeRepository(BaseRepository[TradeORM]):
                 ).label("avg_sell_usd_price"),
             )
             .join(PairORM, PairORM.id == TradeORM.pair_id)
-            .group_by(PairORM.symbol)
+            .group_by(PairORM.id, PairORM.symbol)
         )
 
         # Execute the query
@@ -93,6 +94,7 @@ class TradeRepository(BaseRepository[TradeORM]):
         # Map results to AggregatedTrade
         return [
             AggregatedTrade(
+                pair_id=row.id,
                 pair=row.pair,
                 total_bought_quantity=row.buy_quantity,
                 average_buy_native_price=row.avg_buy_native_price,

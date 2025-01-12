@@ -12,6 +12,7 @@ router = APIRouter()
 service_manager = ServiceManager()
 
 class AggTrade(BaseModel):
+    pair_id: int
     pair: str
     available_quantity: float
 
@@ -68,6 +69,7 @@ def add_pair():
         # Add to response
         agg_trades_response.append(
             AggTrade(
+                pair_id=agg_trade.pair_id,
                 pair=agg_trade.pair,
                 available_quantity=available_quantity,
 

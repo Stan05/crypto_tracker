@@ -114,8 +114,9 @@ class Transaction:
         self.payload = payload
 
 class AggregatedTrade:
-    def __init__(self, pair, total_bought_quantity, average_buy_native_price, average_buy_USD_price,
+    def __init__(self, pair_id, pair, total_bought_quantity, average_buy_native_price, average_buy_USD_price,
                  total_sold_quantity, average_sell_native_price, average_sell_USD_price):
+        self.pair_id: int = pair_id
         self.pair: str = pair
 
         self.total_bought_quantity: float = total_bought_quantity
