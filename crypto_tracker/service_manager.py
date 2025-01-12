@@ -1,4 +1,5 @@
 # crypto_tracker/services/service_manager.py
+from crypto_tracker.services.agg_trades_service import AggregatedTradesService
 from crypto_tracker.services.pair_service import PairService
 from crypto_tracker.services.token_service import TokenService
 from crypto_tracker.services.trade_service import TradeService
@@ -15,4 +16,5 @@ class ServiceManager:
         self.pair_service = PairService()
         self.token_service = TokenService()
         self.transaction_service = TransactionService()
+        self.agg_trades_service = AggregatedTradesService()
 

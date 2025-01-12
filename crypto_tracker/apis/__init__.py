@@ -8,6 +8,7 @@ from .trades_api import router as trades_router
 from .pair_api import router as pairs_router
 from .token_api import router as tokens_router
 from .transactions_api import router as transactions_router
+from .agg_trades_api import router as agg_trades_router
 
 # Central API router
 api_router = APIRouter()
@@ -18,3 +19,4 @@ api_router.include_router(trades_router, prefix="/trades", tags=["Trades"])
 api_router.include_router(pairs_router, prefix="/pairs", tags=["Pairs"])
 api_router.include_router(tokens_router, prefix="/tokens", tags=["Tokens"])
 api_router.include_router(transactions_router, prefix="/transactions", tags=["Transactions"])
+api_router.include_router(agg_trades_router, prefix="/aggregated-trades", tags=["Aggregated Trades"])

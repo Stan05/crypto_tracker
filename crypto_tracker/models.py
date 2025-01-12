@@ -65,6 +65,10 @@ class TradeType(BaseEnum):
     BUY = "buy"
     SELL = "sell"
 
+class TradeStatus(BaseEnum):
+    IN_TRADE = "In Trade"
+    SOLD = "Sold"
+    MOON_BAG = "Moon Bag"
 
 class ChainIdType(BaseEnum):
     ETHEREUM = "ethereum"
@@ -108,3 +112,18 @@ class Transaction:
         self.id: str = id
         self.swap: Swap = swap
         self.payload = payload
+
+class AggregatedTrade:
+    def __init__(self, pair, total_bought_quantity, average_buy_native_price, average_buy_USD_price,
+                 total_sold_quantity, average_sell_native_price, average_sell_USD_price):
+        self.pair: str = pair
+
+        self.total_bought_quantity: float = total_bought_quantity
+        self.average_buy_native_price: float = average_buy_native_price
+        self.average_buy_USD_price: float = average_buy_USD_price
+
+        self.total_sold_quantity: float = total_sold_quantity
+        self.average_sell_native_price: float = average_sell_native_price
+        self.average_sell_USD_price: float = average_sell_USD_price
+
+
