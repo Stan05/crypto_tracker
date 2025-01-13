@@ -23,3 +23,6 @@ class TradeService:
 
     def get_trade(self, trade_id: int) -> TradeORM:
         return self.db.trade_repo.get_by_id(trade_id)
+
+    def get_trades_by_pair(self, pair_id: int) -> [TradeORM]:
+        return  self.db.trade_repo.get_all_by_pair_id(pair_id)

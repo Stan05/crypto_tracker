@@ -31,38 +31,39 @@ class TradeRepository(BaseRepository[TradeORM]):
                 .first()
                 )
 
+    def get_all_by_pair_id(self, pair_id: int) -> [TradeORM]:
+        return (self.db_session
+                .query(TradeORM)
+                .filter(TradeORM.pair_id == pair_id)
+                .order_by(TradeORM.trade_timestamp)
+                .all())
+
+    def get_aggregated_trade_data_by_pair_id(self, pair_id: int):
+        query = (
+            self.__get_aggregated_trade_date_query()
+            .join(PairORM, PairORM.id == TradeORM.pair_id)
+            .where(PairORM.id == pair_id)
+            .group_by(PairORM.id, PairORM.symbol)
+        )
+
+        # Execute the query
+        result = query.first()
+
+        # Map results to AggregatedTrade
+        return AggregatedTrade(
+                pair_id=result.id,
+                pair=result.pair,
+                total_buy_quantity=result.total_buy_quantity,
+                total_buy_native_value=result.total_buy_native_value,
+                total_buy_usd_value=result.total_buy_usd_value,
+                total_sell_quantity=result.total_sell_quantity,
+                total_sell_native_value=result.total_sell_native_value,
+                total_sell_usd_value=result.total_sell_usd_value,
+            )
+
     def get_aggregated_trade_data(self):
         query = (
-            self.db_session.query(
-                PairORM.id,
-                PairORM.symbol.label("pair"),
-                func.sum(
-                    case((TradeORM.trade_type == TradeType.BUY.name, TradeORM.quantity), else_=0)
-                ).label("total_buy_quantity"),
-                func.sum(
-                    case((TradeORM.trade_type == TradeType.BUY.name, TradeORM.native_price * TradeORM.quantity),
-                         else_=0)
-                ).label("total_buy_native_value"),
-                func.sum(
-                    case((TradeORM.trade_type == TradeType.BUY.name, TradeORM.usd_price * TradeORM.quantity), else_=0)
-                ).label("total_buy_usd_value"),
-                func.abs(
-                    func.sum(
-                        case((TradeORM.trade_type == TradeType.SELL.name, TradeORM.quantity), else_=0)
-                    )
-                ).label("total_sell_quantity"),
-                func.abs(
-                    func.sum(
-                        case((TradeORM.trade_type == TradeType.SELL.name, TradeORM.native_price * TradeORM.quantity),
-                            else_=0)
-                    )
-                ).label("total_sell_native_value"),
-                func.abs(
-                    func.sum(
-                        case((TradeORM.trade_type == TradeType.SELL.name, TradeORM.usd_price * TradeORM.quantity), else_=0)
-                    )
-                ).label("total_sell_usd_value"),
-            )
+            self.__get_aggregated_trade_date_query()
             .join(PairORM, PairORM.id == TradeORM.pair_id)
             .group_by(PairORM.id, PairORM.symbol)
         )
@@ -84,3 +85,35 @@ class TradeRepository(BaseRepository[TradeORM]):
             )
             for row in results
         ]
+
+    def __get_aggregated_trade_date_query(self):
+        return self.db_session.query(
+            PairORM.id,
+            PairORM.symbol.label("pair"),
+            func.sum(
+                case((TradeORM.trade_type == TradeType.BUY.name, TradeORM.quantity), else_=0)
+            ).label("total_buy_quantity"),
+            func.sum(
+                case((TradeORM.trade_type == TradeType.BUY.name, TradeORM.native_price * TradeORM.quantity),
+                     else_=0)
+            ).label("total_buy_native_value"),
+            func.sum(
+                case((TradeORM.trade_type == TradeType.BUY.name, TradeORM.usd_price * TradeORM.quantity), else_=0)
+            ).label("total_buy_usd_value"),
+            func.abs(
+                func.sum(
+                    case((TradeORM.trade_type == TradeType.SELL.name, TradeORM.quantity), else_=0)
+                )
+            ).label("total_sell_quantity"),
+            func.abs(
+                func.sum(
+                    case((TradeORM.trade_type == TradeType.SELL.name, TradeORM.native_price * TradeORM.quantity),
+                         else_=0)
+                )
+            ).label("total_sell_native_value"),
+            func.abs(
+                func.sum(
+                    case((TradeORM.trade_type == TradeType.SELL.name, TradeORM.usd_price * TradeORM.quantity), else_=0)
+                )
+            ).label("total_sell_usd_value"),
+        )

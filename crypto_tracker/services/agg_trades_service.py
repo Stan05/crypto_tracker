@@ -14,5 +14,5 @@ class AggregatedTradesService:
         return self.db.trade_repo.get_aggregated_trade_data()
 
 
-    def get_agg_trade(self, pair_id) -> AggregatedTrade:
-        return AggregatedTrade()
+    def get_agg_trade_for_pair(self, pair_id) -> AggregatedTrade:
+        return self.db.trade_repo.get_aggregated_trade_data_by_pair_id(pair_id)
