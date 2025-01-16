@@ -29,5 +29,14 @@ def process_transaction(request: QueryTxnRequest):
     logger.info("Transaction successfully processed")
     return QueryTxnResponse(id=1)
 
+@router.post("/{chain_id}/{dex_id}/{txn_id}", response_model=QueryTxnResponse)
+def process_transaction(chain_id:ChainIdType, dex_id:DexIdType, txn_id: str):
+    """
+    Add a new trade.
+    """
+    logger.info(f"Querying txn {txn_id} on chain {chain_id} from dex {dex_id}")
+    service_manager.transaction_service.scrape_transaction(txn_id, chain_id, dex_id)
+    logger.info("Transaction successfully processed")
+    return QueryTxnResponse(id=1)
 
 

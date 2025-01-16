@@ -79,7 +79,6 @@ class GraphProtocolConnector(ABC, Generic[T, K]):
         query = gql(self.get_query())
         async with self.client as session:
             response = await session.execute(query, variable_values=variables)
-            print(response)
             response_model = self.get_response_model_type()
             pydantic_model = response_model.model_validate(response)
             return self.transform_response(pydantic_model)
