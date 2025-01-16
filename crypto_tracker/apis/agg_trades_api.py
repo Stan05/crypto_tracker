@@ -78,10 +78,10 @@ def add_pair():
         )
 
         # Calculate PNL
-        pnl_native = total_sell_native_value - total_buy_native_value
-        pnl_usd = total_sell_usd_value - total_buy_usd_value
+        pnl_native = total_sell_native_value - total_buy_native_value if total_sell_usd_value > 0 else 0
+        pnl_usd = total_sell_usd_value - total_buy_usd_value if total_sell_usd_value > 0 else 0
         pnl_percent = (
-            (pnl_usd / total_buy_usd_value) * 100 if total_buy_usd_value > 0 else 0
+            (pnl_usd / total_buy_usd_value) * 100 if total_buy_usd_value > 0 and pnl_usd > 0 else 0
         )
 
         # Determine status

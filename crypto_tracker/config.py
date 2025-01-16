@@ -47,3 +47,4 @@ class Config:
 
         # GRT Protocol
         self.GRAPH_UNISWAP_V3_URL = os.environ.get("GRAPH_UNISWAP_V3_URL") or config.get(USER_CFG_SECTION, "GRAPH_UNISWAP_V3_URL")
+        self.UNISWAP_POOLED_TOKENS = os.environ.get("UNISWAP_POOLED_TOKENS") or config.get(USER_CFG_SECTION, "UNISWAP_POOLED_TOKENS")

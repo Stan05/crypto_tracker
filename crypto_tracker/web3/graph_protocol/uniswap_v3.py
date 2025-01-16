@@ -3,7 +3,7 @@ from typing import List, Type
 from pydantic import BaseModel, Field
 
 from crypto_tracker.config import Config
-from crypto_tracker.models import Transaction, Swap, Token
+from crypto_tracker.models import Transaction, Swap, Token, TradeType
 from crypto_tracker.web3.graph_protocol.connector import GraphProtocolConnector, T
 
 
@@ -37,6 +37,7 @@ class GraphResponse(BaseModel):
 class GrtUniswapSwapV3Connector(GraphProtocolConnector[GraphResponse, Transaction]):
     def __init__(self):
         self.config = Config()
+        self.pooled_tokens: [str] = self.config.UNISWAP_POOLED_TOKENS
         super().__init__(graphql_endpoint=self.config.GRAPH_UNISWAP_V3_URL)
 
     def get_query(self) -> str:
@@ -87,23 +88,47 @@ class GrtUniswapSwapV3Connector(GraphProtocolConnector[GraphResponse, Transactio
         Returns:
             Transaction: The internal Transaction model instance.
         """
-        swap: Swap = Swap(
-            base_token_amount = response.transaction.swaps[0].base_token_amount,
-            quote_token_amount = response.transaction.swaps[0].quote_token_amount,
-            amount_USD = response.transaction.swaps[0].amountUSD,
-            origin = response.transaction.swaps[0].origin,
+        graph_swap:GraphSwap = response.transaction.swaps[0]
+
+        if self.pooled_tokens.__contains__(graph_swap.base_token.symbol):
             base_token = Token(
-                address = response.transaction.swaps[0].base_token.id,
-                name = response.transaction.swaps[0].base_token.name,
-                symbol = response.transaction.swaps[0].base_token.symbol,
-            ),
+                    address = graph_swap.quote_token.id,
+                    name = graph_swap.quote_token.name,
+                    symbol = graph_swap.quote_token.symbol,
+                )
+            base_token_amount = graph_swap.quote_token_amount
+            trade_type = TradeType.BUY if graph_swap.base_token_amount > 0 else TradeType.SELL
             quote_token = Token(
-                    address = response.transaction.swaps[0].quote_token.id,
-                    name = response.transaction.swaps[0].quote_token.name,
-                    symbol = response.transaction.swaps[0].quote_token.symbol,
-                ),
-            timestamp = response.transaction.swaps[0].timestamp,
-            pool_id = response.transaction.swaps[0].pool.id
+                address = graph_swap.base_token.id,
+                name = graph_swap.base_token.name,
+                symbol = graph_swap.base_token.symbol,
+            )
+            quote_token_amount = graph_swap.base_token_amount
+        else:
+            base_token = Token(
+                address = graph_swap.base_token.id,
+                name = graph_swap.base_token.name,
+                symbol = graph_swap.base_token.symbol,
+            )
+            base_token_amount = graph_swap.base_token_amount
+            trade_type = TradeType.BUY if graph_swap.quote_token_amount > 0 else TradeType.SELL
+            quote_token = Token(
+                    address = graph_swap.quote_token.id,
+                    name = graph_swap.quote_token.name,
+                    symbol = graph_swap.quote_token.symbol,
+                )
+            quote_token_amount = graph_swap.quote_token_amount
+
+        swap: Swap = Swap(
+            base_token_amount = base_token_amount,
+            quote_token_amount = quote_token_amount,
+            amount_USD = graph_swap.amountUSD,
+            origin = graph_swap.origin,
+            base_token = base_token,
+            trade_type= trade_type,
+            quote_token = quote_token,
+            timestamp = graph_swap.timestamp,
+            pool_id = graph_swap.pool.id
         )
 
         return Transaction(
