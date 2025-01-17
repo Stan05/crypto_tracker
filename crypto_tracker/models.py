@@ -80,6 +80,7 @@ class DexIdType(BaseEnum):
     UNISWAP = "uniswap"
     KYBERSWAP = "kyberswap"
     MATCHA = "matcha"
+    VIRTUALS = "virtuals"
 
 class TransactionStatusType(BaseEnum):
     PENDING = "PENDING"

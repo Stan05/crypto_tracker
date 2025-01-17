@@ -1,5 +1,5 @@
 from web3 import Web3
-from ..config import Config
+from crypto_tracker.config import Config
 
 config = Config()
 

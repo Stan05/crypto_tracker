@@ -5,11 +5,11 @@ from crypto_tracker.logger import Logger
 from crypto_tracker.models import ChainIdType, DexIdType, TradeType, TransactionResponseType, TransactionStatusType, \
     Transaction
 from crypto_tracker.repositories.models.base import TradeORM, TokenORM, PairORM, WalletORM, TransactionORM
-from crypto_tracker.scrapers.base_scan_scraper import BaseScraper
 from crypto_tracker.services.pair_service import PairService
 from crypto_tracker.services.token_service import TokenService
 from crypto_tracker.services.trade_service import TradeService
-from crypto_tracker.web3.graph_protocol.uniswap_v3 import GrtUniswapSwapV3Connector
+from crypto_tracker.services.transactions.transaction_extractor_context import TransactionExtractorContext
+
 
 class TransactionService:
     def __init__(self):
@@ -18,8 +18,7 @@ class TransactionService:
         self.token_service = TokenService()
         self.pair_service = PairService()
         self.trade_service = TradeService()
-        self.uniswap = GrtUniswapSwapV3Connector()
-        self.base_scraper = BaseScraper()
+        self.transaction_extractor_context = TransactionExtractorContext()
 
     def add_txn_if_not_exist(self, txn: TransactionORM) -> TransactionORM:
         existing_txn = self.db.transaction_repo.get_txn_by_hash(txn.hash)
@@ -29,22 +28,13 @@ class TransactionService:
         return existing_txn
 
     def process_transaction(self, txn_hash:str, chain_id:ChainIdType, dex_id: DexIdType):
-        if chain_id is not ChainIdType.BASE:
-            raise Exception(f'Querying chain {chain_id} is not supported yet')
-        if dex_id is not DexIdType.UNISWAP:
-            raise Exception(f'Querying dex {dex_id} is not supported yet')
-
         """
         1. Check if wallet is created, otherwise throw and has the ability to reprocess
         2. Check if tokens in txn are created, if not create them
         3. Check if pair in txn is created, if not create it
         4. Add the trade
         """
-        try:
-            transaction:Transaction = self.uniswap.fetch(variables={"transactionId": txn_hash})
-        except RuntimeError as e:
-            print(f"Error: {e}")
-            return
+        transaction: Transaction = self.transaction_extractor_context.extract(txn_hash, dex_id, chain_id)
 
         txn: TransactionORM = self.add_txn_if_not_exist(TransactionORM(
             hash=transaction.id,
@@ -100,7 +90,7 @@ class TransactionService:
             ))
 
         except Exception as e:
-            self.logger.error(f"Failed to process transaction {transaction.data.transaction.id}: {e}")
+            self.logger.error(f"Failed to process transaction {transaction.id}: {e}")
             self.db.transaction_repo.update_status_by_id(txn.id, TransactionStatusType.FAILED)
 
         self.db.transaction_repo.update_status_by_id(txn.id, TransactionStatusType.PROCESSED)
@@ -118,10 +108,4 @@ class TransactionService:
             self.logger.error(f"Unrecognized trade scenario for pair {pair.symbol} in transaction {txn.id}")
             raise Exception
         return native_price, quantity, usd_price
-
-    def scrape_transaction(self, txn_id: str, chain_id: ChainIdType, dex_id: DexIdType) -> int:
-        result = self.base_scraper.get_transaction(txn_id)
-
-        self.logger.info(result)
-        return 1
 

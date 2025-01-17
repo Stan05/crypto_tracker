@@ -1,10 +1,10 @@
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 from pydantic import BaseModel
 
 from ..logger import Logger
 from crypto_tracker.service_manager import ServiceManager
-from ..models import TradeType, ChainIdType, DexIdType
+from ..models import ChainIdType, DexIdType
 
 logger = Logger()
 router = APIRouter()
@@ -26,16 +26,6 @@ def process_transaction(request: QueryTxnRequest):
     """
     logger.info(f"Querying txn {request.txn_id} on chain {request.chain_id} from dex {request.dex_id}")
     service_manager.transaction_service.process_transaction(request.txn_id, request.chain_id, request.dex_id)
-    logger.info("Transaction successfully processed")
-    return QueryTxnResponse(id=1)
-
-@router.post("/{chain_id}/{dex_id}/{txn_id}", response_model=QueryTxnResponse)
-def process_transaction(chain_id:ChainIdType, dex_id:DexIdType, txn_id: str):
-    """
-    Add a new trade.
-    """
-    logger.info(f"Querying txn {txn_id} on chain {chain_id} from dex {dex_id}")
-    service_manager.transaction_service.scrape_transaction(txn_id, chain_id, dex_id)
     logger.info("Transaction successfully processed")
     return QueryTxnResponse(id=1)
 

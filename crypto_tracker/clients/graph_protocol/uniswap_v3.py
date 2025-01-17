@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 
 from crypto_tracker.config import Config
 from crypto_tracker.models import Transaction, Swap, Token, TradeType
-from crypto_tracker.web3.graph_protocol.connector import GraphProtocolConnector, T
+from crypto_tracker.clients.graph_protocol.connector import GraphProtocolConnector
 
 
 class GraphToken(BaseModel):
