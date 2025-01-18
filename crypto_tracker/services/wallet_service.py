@@ -1,9 +1,11 @@
 # crypto_tracker/services/wallet_service.py
+from wireup import service
+
 from crypto_tracker.models import ChainIdType
 from crypto_tracker.database import Database
 from crypto_tracker.repositories.models.base import WalletORM
 
-
+@service
 class WalletService:
     def __init__(self):
         self.db = Database()

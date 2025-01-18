@@ -1,9 +1,11 @@
 # crypto_tracker/services/token_service.py
+from wireup import service
+
 from crypto_tracker.database import Database
 from crypto_tracker.logger import Logger
 from crypto_tracker.repositories.models.base import TradeORM, TokenORM
 
-
+@service
 class TokenService:
     def __init__(self):
         self.db = Database()

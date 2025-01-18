@@ -1,22 +1,21 @@
-from typing import Any, Self
+from typing import Any, Self, Annotated
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
+from wireup import Inject
 
 from ..logger import Logger
 from ..models import ChainIdType
-from crypto_tracker.service_manager import ServiceManager
 from ..repositories.models.base import WalletORM
+from ..services.wallet_service import WalletService
 
 logger = Logger()
 router = APIRouter()
-service_manager = ServiceManager()
 
 class WalletRequest(BaseModel):
     address: str
     chain_id: str
     name: str
-
 
 class WalletResponse(BaseModel):
     id: int
@@ -30,7 +29,7 @@ class WalletResponse(BaseModel):
 
 
 @router.post("/", response_model=WalletResponse)
-def add_wallet(request: WalletRequest):
+def add_wallet(request: WalletRequest, wallet_service: Annotated[WalletService, Inject()]):
     """
     Add a new wallet.
     """
@@ -41,26 +40,26 @@ def add_wallet(request: WalletRequest):
     """
     # Add the wallet
     logger.info(f"Creating wallet with name {request.name} for chain {request.chain_id} with address {request.address}")
-    new_wallet = service_manager.wallet_service.add_wallet(wallet_address=request.address, chain_id=ChainIdType.from_name(request.chain_id), name=request.name)
+    new_wallet = wallet_service.add_wallet(wallet_address=request.address, chain_id=ChainIdType.from_name(request.chain_id), name=request.name)
     logger.info(f"Wallet successfully added")
     return WalletResponse.from_orm(new_wallet)
 
 
 @router.get("/", response_model=list[WalletResponse])
-def get_wallets():
+def get_wallets(wallet_service: Annotated[WalletService, Inject()]):
     """
     Retrieve all wallets.
     """
-    wallets = service_manager.wallet_service.get_wallets()
+    wallets = wallet_service.get_wallets()
     return [WalletResponse.from_orm(w) for w in wallets]
 
 
 @router.get("/{wallet_id}", response_model=WalletResponse)
-def get_wallet(wallet_id: int):
+def get_wallet(wallet_id: int, wallet_service: Annotated[WalletService, Inject()]):
     """
     Retrieve a single wallet by ID.
     """
-    wallet = service_manager.wallet_service.get_wallet(wallet_id)
+    wallet = wallet_service.get_wallet(wallet_id)
     if not wallet:
         raise HTTPException(status_code=404, detail="Wallet not found")
     return WalletResponse.from_orm(wallet)

@@ -1,10 +1,12 @@
 from typing import List
 
+from wireup import service
+
 from crypto_tracker.database import Database
 from crypto_tracker.logger import Logger
 from crypto_tracker.models import AggregatedTrade
 
-
+@service
 class AggregatedTradesService:
     def __init__(self):
         self.db = Database()

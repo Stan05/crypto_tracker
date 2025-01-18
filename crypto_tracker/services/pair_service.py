@@ -1,9 +1,11 @@
 # crypto_tracker/services/wallet_service.py
+from wireup import service
+
 from crypto_tracker.database import Database
 from crypto_tracker.logger import Logger
 from crypto_tracker.repositories.models.base import TradeORM, PairORM, TokenORM
 
-
+@service
 class PairService:
     def __init__(self):
         self.db = Database()

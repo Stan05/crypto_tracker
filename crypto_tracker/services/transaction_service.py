@@ -1,4 +1,5 @@
 # crypto_tracker/services/transaction_service.py
+from wireup import service
 
 from crypto_tracker.database import Database
 from crypto_tracker.logger import Logger
@@ -10,7 +11,7 @@ from crypto_tracker.services.token_service import TokenService
 from crypto_tracker.services.trade_service import TradeService
 from crypto_tracker.services.transactions.transaction_extractor_context import TransactionExtractorContext
 
-
+@service
 class TransactionService:
     def __init__(self):
         self.db = Database()

@@ -19,6 +19,7 @@ web3 = "^7.6.0"
 pydantic = "^2.10.2"
 gql = "^3.5.0"
 beautifulsoup4 = "^4.12.3"
+wireup = "^0.15.1"
 
 [tool.poetry.scripts]
 update-trades = "crypto_tracker.__main__:update_trades"

@@ -1,7 +1,9 @@
+from wireup.integration import fastapi
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .apis import api_router
+from .di import container
 
 app = FastAPI()
 
@@ -16,3 +18,4 @@ app.add_middleware(
 
 # Register APIs
 app.include_router(api_router)
+fastapi.setup(container, app)
