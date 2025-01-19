@@ -5,7 +5,7 @@ from .base_repository import BaseRepository
 from .models.base import TradeORM, PairORM
 from sqlalchemy.orm import Session
 
-from crypto_tracker.logger import Logger
+from crypto_tracker.configs.logger import Logger
 from ..models import TradeType, AggregatedTrade
 
 

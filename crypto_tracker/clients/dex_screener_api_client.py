@@ -1,6 +1,5 @@
 import requests
-from sqlalchemy.dialects.postgresql.psycopg import logger
-from crypto_tracker.logger import Logger
+from crypto_tracker.configs.logger import Logger
 
 class DexScreenerApiClient:
     def __init__(self):

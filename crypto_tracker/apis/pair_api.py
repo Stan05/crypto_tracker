@@ -1,15 +1,14 @@
-from typing import Any, Self, Annotated
+from typing import Self, Annotated
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from wireup import Inject
 
-from ..logger import Logger
+from crypto_tracker.configs.logger import Logger
 from ..models import ChainIdType, DexIdType
 from ..repositories.models.base import PairORM
 from ..services.pair_service import PairService
 
-logger = Logger()
 router = APIRouter()
 
 class PairRequest(BaseModel):
@@ -53,7 +52,9 @@ class PairResponse(BaseModel):
 
 
 @router.post("/", response_model=PairResponse)
-def add_pair(request: PairRequest, pair_service: Annotated[PairService, Inject()]):
+def add_pair(request: PairRequest,
+             pair_service: Annotated[PairService, Inject()],
+             logger: Annotated[Logger, Inject()]):
     """
     Add a new pair.
     """
@@ -64,7 +65,8 @@ def add_pair(request: PairRequest, pair_service: Annotated[PairService, Inject()
 
 
 @router.get("/", response_model=list[PairResponse])
-def get_pairs(pair_service: Annotated[PairService, Inject()]):
+def get_pairs(pair_service: Annotated[PairService, Inject()],
+              logger: Annotated[Logger, Inject()]):
     """
     Retrieve all pairs.
     """
@@ -74,7 +76,9 @@ def get_pairs(pair_service: Annotated[PairService, Inject()]):
 
 
 @router.get("/{pair_id}", response_model=PairResponse)
-def get_pair(pair_id: int, pair_service: Annotated[PairService, Inject()]):
+def get_pair(pair_id: int,
+             pair_service: Annotated[PairService, Inject()],
+             logger: Annotated[Logger, Inject()]):
     """
     Retrieve a single pair by ID.
     """

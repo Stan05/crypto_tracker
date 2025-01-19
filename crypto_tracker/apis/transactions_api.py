@@ -4,11 +4,10 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 from wireup import Inject
 
-from ..logger import Logger
+from crypto_tracker.configs.logger import Logger
 from ..models import ChainIdType, DexIdType
 from ..services.transaction_service import TransactionService
 
-logger = Logger()
 router = APIRouter()
 
 class QueryTxnRequest(BaseModel):
@@ -21,7 +20,9 @@ class QueryTxnResponse(BaseModel):
 
 
 @router.post("/", response_model=QueryTxnResponse)
-def process_transaction(request: QueryTxnRequest, transaction_service: Annotated[TransactionService, Inject()]):
+def process_transaction(request: QueryTxnRequest,
+                        transaction_service: Annotated[TransactionService, Inject()],
+                        logger: Annotated[Logger, Inject()]):
     """
     Add a new trade.
     """

@@ -1,15 +1,14 @@
-from typing import Any, Self, Annotated
+from typing import Self, Annotated
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from wireup import Inject
 
-from ..logger import Logger
+from crypto_tracker.configs.logger import Logger
 from ..models import ChainIdType
 from ..repositories.models.base import WalletORM
 from ..services.wallet_service import WalletService
 
-logger = Logger()
 router = APIRouter()
 
 class WalletRequest(BaseModel):
@@ -29,7 +28,9 @@ class WalletResponse(BaseModel):
 
 
 @router.post("/", response_model=WalletResponse)
-def add_wallet(request: WalletRequest, wallet_service: Annotated[WalletService, Inject()]):
+def add_wallet(request: WalletRequest,
+               wallet_service: Annotated[WalletService, Inject()],
+               logger: Annotated[Logger, Inject()]):
     """
     Add a new wallet.
     """
@@ -55,7 +56,8 @@ def get_wallets(wallet_service: Annotated[WalletService, Inject()]):
 
 
 @router.get("/{wallet_id}", response_model=WalletResponse)
-def get_wallet(wallet_id: int, wallet_service: Annotated[WalletService, Inject()]):
+def get_wallet(wallet_id: int,
+               wallet_service: Annotated[WalletService, Inject()],):
     """
     Retrieve a single wallet by ID.
     """

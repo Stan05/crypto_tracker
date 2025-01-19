@@ -5,12 +5,11 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from wireup import Inject
 
-from ..logger import Logger
+from crypto_tracker.configs.logger import Logger
 from ..models import TradeType
 from ..repositories.models.base import TradeORM
 from ..services.trade_service import TradeService
 
-logger = Logger()
 router = APIRouter()
 
 class TradeRequest(BaseModel):
@@ -58,7 +57,9 @@ class TradeResponse(BaseModel):
 
 
 @router.post("/", response_model=TradeResponse)
-def add_trade(request: TradeRequest, trade_service: Annotated[TradeService, Inject()]):
+def add_trade(request: TradeRequest,
+              trade_service: Annotated[TradeService, Inject()],
+              logger: Annotated[Logger, Inject()]):
     """
     Add a new trade.
     """
@@ -68,7 +69,8 @@ def add_trade(request: TradeRequest, trade_service: Annotated[TradeService, Inje
     return TradeResponse.from_orm(new_trade)
 
 @router.get("/", response_model=list[TradeResponse])
-def get_trades(trade_service: Annotated[TradeService, Inject()]):
+def get_trades(trade_service: Annotated[TradeService, Inject()],
+               logger: Annotated[Logger, Inject()]):
     """
     Retrieve all trades.
     """
@@ -78,7 +80,9 @@ def get_trades(trade_service: Annotated[TradeService, Inject()]):
 
 
 @router.get("/{trade_id}", response_model=TradeResponse)
-def get_trade(trade_id: int, trade_service: Annotated[TradeService, Inject()]):
+def get_trade(trade_id: int,
+              trade_service: Annotated[TradeService, Inject()],
+              logger: Annotated[Logger, Inject()]):
     """
     Retrieve a single trade by ID.
     """

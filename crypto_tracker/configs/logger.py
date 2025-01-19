@@ -2,7 +2,9 @@ import logging
 import logging.handlers
 import os
 
+from wireup import service
 
+@service
 class Logger:
 
     def __init__(self, logging_service="crypto_tracker"):

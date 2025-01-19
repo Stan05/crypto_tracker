@@ -1,5 +1,5 @@
 import subprocess
-from ..logger import Logger
+from crypto_tracker.configs.logger import Logger
 from .mac_number_price_sync import CoinMetadata
 
 

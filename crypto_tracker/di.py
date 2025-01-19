@@ -1,11 +1,11 @@
 import wireup
 
-from crypto_tracker import services
+from crypto_tracker import services, configs
 
 container = wireup.create_container(
     # Parameters serve as application/service configuration.
     # Let the container know where service registrations are located.
-    service_modules=[services]
+    service_modules=[services, configs]
 )
 """
 container = wireup.create_container(

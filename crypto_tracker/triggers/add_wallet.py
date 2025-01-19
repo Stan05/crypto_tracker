@@ -2,7 +2,7 @@ from typing import Annotated
 
 from wireup import Inject
 
-from ..logger import Logger
+from crypto_tracker.configs.logger import Logger
 from ..models import ChainIdType
 from ..services.wallet_service import WalletService
 

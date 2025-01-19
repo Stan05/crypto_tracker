@@ -1,14 +1,13 @@
-from typing import Any, Self, Annotated
+from typing import Self, Annotated
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from wireup import Inject
 
-from ..logger import Logger
+from crypto_tracker.configs.logger import Logger
 from ..repositories.models.base import TokenORM
 from ..services.token_service import TokenService
 
-logger = Logger()
 router = APIRouter()
 
 class TokenRequest(BaseModel):
@@ -40,7 +39,9 @@ class TokenResponse(BaseModel):
 
 
 @router.post("/", response_model=TokenResponse)
-def add_token(request: TokenRequest, token_service: Annotated[TokenService, Inject()]):
+def add_token(request: TokenRequest,
+              token_service: Annotated[TokenService, Inject()],
+              logger: Annotated[Logger, Inject()]):
     """
     Add a new token.
     """
@@ -51,7 +52,8 @@ def add_token(request: TokenRequest, token_service: Annotated[TokenService, Inje
 
 
 @router.get("/", response_model=list[TokenResponse])
-def get_tokens(token_service: Annotated[TokenService, Inject()]):
+def get_tokens(token_service: Annotated[TokenService, Inject()],
+               logger: Annotated[Logger, Inject()]):
     """
     Retrieve all tokens.
     """
@@ -61,7 +63,9 @@ def get_tokens(token_service: Annotated[TokenService, Inject()]):
 
 
 @router.get("/{token_id}", response_model=TokenResponse)
-def get_token(token_id: int, token_service: Annotated[TokenService, Inject()]):
+def get_token(token_id: int,
+              token_service: Annotated[TokenService, Inject()],
+              logger: Annotated[Logger, Inject()]):
     """
     Retrieve a single token by ID.
     """

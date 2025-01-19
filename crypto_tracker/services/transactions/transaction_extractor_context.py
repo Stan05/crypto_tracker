@@ -1,4 +1,4 @@
-from crypto_tracker.logger import Logger
+from crypto_tracker.configs.logger import Logger
 from crypto_tracker.models import DexIdType, ChainIdType, Transaction
 from crypto_tracker.services.transactions.extractors.uniswap_base_extractor import UniswapBaseExtractor
 from crypto_tracker.services.transactions.extractors.virtual_base_scan_extractor import VirtualBaseScanExtractor

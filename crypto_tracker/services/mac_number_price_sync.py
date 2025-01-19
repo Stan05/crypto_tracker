@@ -3,7 +3,7 @@ import time
 from dataclasses import dataclass
 
 from ..clients_manager import ClientsManager
-from ..logger import Logger
+from crypto_tracker.configs.logger import Logger
 
 @dataclass
 class CoinMetadata:

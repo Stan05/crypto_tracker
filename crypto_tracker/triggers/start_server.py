@@ -1,5 +1,5 @@
 import uvicorn
-from ..logger import Logger
+from crypto_tracker.configs.logger import Logger
 
 logger = Logger()
 

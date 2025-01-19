@@ -2,8 +2,8 @@
 from wireup import service
 
 from crypto_tracker.database import Database
-from crypto_tracker.logger import Logger
-from crypto_tracker.repositories.models.base import TradeORM, PairORM, TokenORM
+from crypto_tracker.configs.logger import Logger
+from crypto_tracker.repositories.models.base import PairORM, TokenORM
 
 @service
 class PairService:

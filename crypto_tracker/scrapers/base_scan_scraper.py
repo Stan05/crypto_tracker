@@ -3,7 +3,7 @@ from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
 
-from crypto_tracker.logger import Logger
+from crypto_tracker.configs.logger import Logger
 from crypto_tracker.models import Transaction, Swap, Token
 
 

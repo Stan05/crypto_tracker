@@ -2,7 +2,7 @@
 from wireup import service
 
 from crypto_tracker.database import Database
-from crypto_tracker.logger import Logger
+from crypto_tracker.configs.logger import Logger
 from crypto_tracker.models import ChainIdType, DexIdType, TradeType, TransactionResponseType, TransactionStatusType, \
     Transaction
 from crypto_tracker.repositories.models.base import TradeORM, TokenORM, PairORM, WalletORM, TransactionORM

@@ -1,5 +1,5 @@
 
-from ..logger import Logger
+from crypto_tracker.configs.logger import Logger
 from ..services.mac_number_price_sync import MacNumbersPriceSyncService
 
 logger = Logger()

@@ -3,7 +3,7 @@ import argparse
 
 from .utils import validate_arguments
 from .triggers import TRIGGERS
-from .logger import Logger
+from crypto_tracker.configs.logger import Logger
 
 
 logger = Logger()

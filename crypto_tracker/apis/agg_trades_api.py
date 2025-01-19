@@ -5,12 +5,11 @@ from pydantic import BaseModel
 from wireup import Inject
 
 from .trades_api import TradeResponse
-from ..logger import Logger
+from crypto_tracker.configs.logger import Logger
 from ..models import TradeStatus, AggregatedTrade
 from ..services.agg_trades_service import AggregatedTradesService
 from ..services.trade_service import TradeService
 
-logger = Logger()
 router = APIRouter()
 
 class AggTradeResponse(BaseModel):
@@ -37,7 +36,8 @@ class AggTradesResponse(BaseModel):
     agg_trades: List[AggTradeResponse]
 
 @router.get("/", response_model=AggTradesResponse)
-def add_pair(agg_trades_service: Annotated[AggregatedTradesService, Inject()]):
+def add_pair(agg_trades_service: Annotated[AggregatedTradesService, Inject()],
+             logger: Annotated[Logger, Inject()]):
     """
     Retrieve aggregated trades.
     """
@@ -124,7 +124,8 @@ def add_pair(agg_trades_service: Annotated[AggregatedTradesService, Inject()]):
 @router.get("/{pair_id}", response_model=AggTradeResponse)
 def get_pair_details(pair_id: int,
                      agg_trades_service: Annotated[AggregatedTradesService, Inject()],
-                     trade_service: Annotated[TradeService, Inject()]):
+                     trade_service: Annotated[TradeService, Inject()],
+                     logger: Annotated[Logger, Inject()]):
     """
     Retrieve aggregated data and all trades for a specific pair.
     """
