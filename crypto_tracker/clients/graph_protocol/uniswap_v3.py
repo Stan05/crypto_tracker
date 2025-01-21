@@ -3,7 +3,6 @@ from typing import List, Type, Annotated
 from pydantic import BaseModel, Field
 from wireup import service, Inject
 
-from crypto_tracker.config import Config
 from crypto_tracker.configs.settings import Settings
 from crypto_tracker.models import Transaction, Swap, Token, TradeType
 from crypto_tracker.clients.graph_protocol.connector import GraphProtocolConnector

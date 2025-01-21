@@ -1,18 +1,19 @@
 # crypto_tracker/repositories/trades_repository.py
+from typing import Annotated
+
 from sqlalchemy import func, case
+from wireup import Inject, service
 
 from .base_repository import BaseRepository
 from .models.base import TradeORM, PairORM
 from sqlalchemy.orm import Session
 
-from crypto_tracker.configs.logger import Logger
 from ..models import TradeType, AggregatedTrade
 
-
+@service
 class TradeRepository(BaseRepository[TradeORM]):
-    def __init__(self, db_session: Session):
+    def __init__(self, db_session: Annotated[Session, Inject()]):
         super().__init__(db_session, TradeORM)
-        self.logger = Logger()
 
     def create(self, obj: TradeORM) -> TradeORM:
         """Override create to handle trade-specific logic."""

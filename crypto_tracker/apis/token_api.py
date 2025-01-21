@@ -5,7 +5,6 @@ from pydantic import BaseModel
 from wireup import Inject
 
 from crypto_tracker.configs.logger import Logger
-from ..clients.binance_api_client import BinanceAPIClient
 from ..repositories.models.base import TokenORM
 from ..services.token_service import TokenService
 
@@ -54,14 +53,12 @@ def add_token(request: TokenRequest,
 
 @router.get("/", response_model=list[TokenResponse])
 def get_tokens(token_service: Annotated[TokenService, Inject()],
-               logger: Annotated[Logger, Inject()],
-               biance: Annotated[BinanceAPIClient, Inject()]):
+               logger: Annotated[Logger, Inject()]):
     """
     Retrieve all tokens.
     """
     tokens = token_service.get_tokens()
     logger.info(f"Retrieved {len(tokens)} tokens")
-    biance.fetch_current_price("BTC/USD")
     return [TokenResponse.from_orm(t) for t in tokens]
 
 

@@ -1,13 +1,11 @@
 import wireup
-from binance.spot import Spot
-from wireup import service
 
-from crypto_tracker import services, configs, clients
+from crypto_tracker import services, configs, clients, repositories
 
 container = wireup.create_container(
     # Parameters serve as application/service configuration.
     # Let the container know where service registrations are located.
-    service_modules=[services, configs, clients]
+    service_modules=[services, configs, clients, repositories]
 )
 """
 container = wireup.create_container(
