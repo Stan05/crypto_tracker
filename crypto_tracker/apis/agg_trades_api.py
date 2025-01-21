@@ -1,16 +1,16 @@
-from typing import List
+from typing import List, Annotated
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
+from wireup import Inject
 
-from crypto_tracker.service_manager import ServiceManager
 from .trades_api import TradeResponse
-from ..logger import Logger
+from crypto_tracker.configs.logger import Logger
 from ..models import TradeStatus, AggregatedTrade
+from ..services.agg_trades_service import AggregatedTradesService
+from ..services.trade_service import TradeService
 
-logger = Logger()
 router = APIRouter()
-service_manager = ServiceManager()
 
 class AggTradeResponse(BaseModel):
     pair_id: int
@@ -36,12 +36,13 @@ class AggTradesResponse(BaseModel):
     agg_trades: List[AggTradeResponse]
 
 @router.get("/", response_model=AggTradesResponse)
-def add_pair():
+def add_pair(agg_trades_service: Annotated[AggregatedTradesService, Inject()],
+             logger: Annotated[Logger, Inject()]):
     """
     Retrieve aggregated trades.
     """
     logger.info(f"Retrieving aggregated trades")
-    agg_trades:List[AggregatedTrade] = service_manager.agg_trades_service.get_agg_trades()
+    agg_trades:List[AggregatedTrade] = agg_trades_service.get_agg_trades()
     logger.info(f'Agg trades {agg_trades}')
 
     agg_trades_response = []
@@ -121,17 +122,20 @@ def add_pair():
     return AggTradesResponse(agg_trades=agg_trades_response)
 
 @router.get("/{pair_id}", response_model=AggTradeResponse)
-def get_pair_details(pair_id: int):
+def get_pair_details(pair_id: int,
+                     agg_trades_service: Annotated[AggregatedTradesService, Inject()],
+                     trade_service: Annotated[TradeService, Inject()],
+                     logger: Annotated[Logger, Inject()]):
     """
     Retrieve aggregated data and all trades for a specific pair.
     """
     # Fetch aggregated data for the pair
-    aggregated_data:AggregatedTrade = service_manager.agg_trades_service.get_agg_trade_for_pair(pair_id)
+    aggregated_data:AggregatedTrade = agg_trades_service.get_agg_trade_for_pair(pair_id)
     if not aggregated_data:
         raise HTTPException(status_code=404, detail="Pair not found")
 
     # Fetch all trades for the pair
-    trades = service_manager.trade_service.get_trades_by_pair(pair_id)
+    trades = trade_service.get_trades_by_pair(pair_id)
     logger.info(aggregated_data)
     # Extract raw values
     pair = aggregated_data.pair

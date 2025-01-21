@@ -1,30 +1,42 @@
 # crypto_tracker/services/transaction_service.py
+from typing import Annotated
 
-from crypto_tracker.database import Database
-from crypto_tracker.logger import Logger
+from wireup import service, Inject
+
+from crypto_tracker.configs.logger import Logger
 from crypto_tracker.models import ChainIdType, DexIdType, TradeType, TransactionResponseType, TransactionStatusType, \
     Transaction
 from crypto_tracker.repositories.models.base import TradeORM, TokenORM, PairORM, WalletORM, TransactionORM
+from crypto_tracker.repositories.transaction_repository import TransactionRepository
+from crypto_tracker.repositories.wallet_repository import WalletRepository
 from crypto_tracker.services.pair_service import PairService
 from crypto_tracker.services.token_service import TokenService
 from crypto_tracker.services.trade_service import TradeService
 from crypto_tracker.services.transactions.transaction_extractor_context import TransactionExtractorContext
 
-
+@service
 class TransactionService:
-    def __init__(self):
-        self.db = Database()
-        self.logger = Logger()
-        self.token_service = TokenService()
-        self.pair_service = PairService()
-        self.trade_service = TradeService()
-        self.transaction_extractor_context = TransactionExtractorContext()
+    def __init__(self,
+                 logger: Annotated[Logger, Inject()],
+                 transaction_repo: Annotated[TransactionRepository, Inject()],
+                 wallet_repo: Annotated[WalletRepository, Inject()],
+                 token_service: Annotated[TokenService, Inject()],
+                 pair_service: Annotated[PairService, Inject()],
+                 trade_service: Annotated[TradeService, Inject()],
+                 transaction_extractor_context: Annotated[TransactionExtractorContext, Inject()]):
+        self.transaction_repo = transaction_repo
+        self.wallet_repo = wallet_repo
+        self.logger = logger
+        self.token_service = token_service
+        self.pair_service = pair_service
+        self.trade_service = trade_service
+        self.transaction_extractor_context = transaction_extractor_context
 
     def add_txn_if_not_exist(self, txn: TransactionORM) -> TransactionORM:
-        existing_txn = self.db.transaction_repo.get_txn_by_hash(txn.hash)
+        existing_txn = self.transaction_repo.get_txn_by_hash(txn.hash)
         if not existing_txn:
             self.logger.info(f'Trade {txn.hash} does not exist creating it')
-            return self.db.transaction_repo.create(txn)
+            return self.transaction_repo.create(txn)
         return existing_txn
 
     def process_transaction(self, txn_hash:str, chain_id:ChainIdType, dex_id: DexIdType):
@@ -49,7 +61,7 @@ class TransactionService:
 
         try:
             swap = transaction.swap
-            wallet: WalletORM = self.db.wallet_repo.get_wallet_by_address_and_chain(swap.origin, chain_id)
+            wallet: WalletORM = self.wallet_repo.get_wallet_by_address_and_chain(swap.origin, chain_id)
             if not wallet:
                 raise Exception(f'Wallet {swap.origin} for txn {transaction.id} is not created on {chain_id.name}')
 
@@ -91,9 +103,9 @@ class TransactionService:
 
         except Exception as e:
             self.logger.error(f"Failed to process transaction {transaction.id}: {e}")
-            self.db.transaction_repo.update_status_by_id(txn.id, TransactionStatusType.FAILED)
+            self.transaction_repo.update_status_by_id(txn.id, TransactionStatusType.FAILED)
 
-        self.db.transaction_repo.update_status_by_id(txn.id, TransactionStatusType.PROCESSED)
+        self.transaction_repo.update_status_by_id(txn.id, TransactionStatusType.PROCESSED)
 
     def __calculate_trade_props(self, pair, swap, txn):
         if swap.trade_type == TradeType.BUY:

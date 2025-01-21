@@ -1,16 +1,15 @@
-from typing import Any, Self
+from typing import Self, Annotated
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
+from wireup import Inject
 
-from ..logger import Logger
-from crypto_tracker.service_manager import ServiceManager
+from crypto_tracker.configs.logger import Logger
 from ..models import ChainIdType, DexIdType
 from ..repositories.models.base import PairORM
+from ..services.pair_service import PairService
 
-logger = Logger()
 router = APIRouter()
-service_manager = ServiceManager()
 
 class PairRequest(BaseModel):
 
@@ -53,33 +52,38 @@ class PairResponse(BaseModel):
 
 
 @router.post("/", response_model=PairResponse)
-def add_pair(request: PairRequest):
+def add_pair(request: PairRequest,
+             pair_service: Annotated[PairService, Inject()],
+             logger: Annotated[Logger, Inject()]):
     """
     Add a new pair.
     """
     logger.info(f"Creating pair on chain {request.chain_id}")
-    new_pair = service_manager.pair_service.add_pair(request.to_orm())
+    new_pair = pair_service.add_pair(request.to_orm())
     logger.info(f"Pair {new_pair.symbol} successfully added")
     return PairResponse.from_orm(new_pair)
 
 
 @router.get("/", response_model=list[PairResponse])
-def get_pairs():
+def get_pairs(pair_service: Annotated[PairService, Inject()],
+              logger: Annotated[Logger, Inject()]):
     """
     Retrieve all pairs.
     """
-    pairs = service_manager.pair_service.get_pairs()
+    pairs = pair_service.get_pairs()
     logger.info(f"Retrieved {len(pairs)} pairs")
     return [PairResponse.from_orm(p) for p in pairs]
 
 
 @router.get("/{pair_id}", response_model=PairResponse)
-def get_pair(pair_id: int):
+def get_pair(pair_id: int,
+             pair_service: Annotated[PairService, Inject()],
+             logger: Annotated[Logger, Inject()]):
     """
     Retrieve a single pair by ID.
     """
     logger.info(f"Fetching pair with ID {pair_id}")
-    pair = service_manager.pair_service.get_pair(pair_id)
+    pair = pair_service.get_pair(pair_id)
     if not pair:
         logger.error(f"Pair with ID {pair_id} not found")
         raise HTTPException(status_code=404, detail="Pair not found")

@@ -1,15 +1,18 @@
 # crypto_tracker/repositories/trades_repository.py
-from sqlalchemy import and_, func
+from typing import Annotated
+
+from sqlalchemy import func
+from wireup import Inject, service
 
 from .base_repository import BaseRepository
-from .models.base import WalletORM, TransactionORM
+from .models.base import TransactionORM
 from sqlalchemy.orm import Session
 
-from ..models import ChainIdType, TransactionStatusType
+from ..models import TransactionStatusType
 
-
+@service
 class TransactionRepository(BaseRepository[TransactionORM]):
-    def __init__(self, db_session: Session):
+    def __init__(self, db_session: Annotated[Session, Inject()]):
         super().__init__(db_session, TransactionORM)
 
     def get_txn_by_hash(self, txn_hash: str) -> TransactionORM:

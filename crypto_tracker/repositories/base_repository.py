@@ -1,8 +1,7 @@
 # crypto_tracker/repositories/base_repository.py
 
-from sqlalchemy import and_, exists
 from sqlalchemy.orm import Session
-from typing import Type, TypeVar, Generic, List, Any
+from typing import Type, TypeVar, Generic, List
 
 T = TypeVar('T')  # Generic type for SQLAlchemy models
 

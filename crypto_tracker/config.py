@@ -5,6 +5,9 @@ import os
 CFG_FL_NAME = "user.cfg"
 USER_CFG_SECTION = "binance_user_config"
 
+"""
+Remove once migrated from excel to app
+"""
 class Config: 
     def __init__(self):
         # Init config

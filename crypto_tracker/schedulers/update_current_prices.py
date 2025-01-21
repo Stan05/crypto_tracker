@@ -1,13 +1,12 @@
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
 from datetime import datetime
-from crypto_tracker.service_manager import ServiceManager
 
 # Define your job function
 def job():
     print(f"Updating current prices...")
-    service_manager = ServiceManager()
-    service_manager.price_service.fetch_and_store_current_prices()
+    #service_manager = Pric
+    #service_manager.price_service.fetch_and_store_current_prices()
     print(f"Job executed at {datetime.now()}")
 
 # Initialize the scheduler

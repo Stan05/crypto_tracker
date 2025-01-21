@@ -1,14 +1,15 @@
 from binance.spot import Spot
-from crypto_tracker.config import Config
-from crypto_tracker.models import Trade, Symbol
-from typing import List
-from datetime import datetime
-from crypto_tracker.utils import to_datetime, to_timestamp_millis
+from wireup import service, Inject
 
+from crypto_tracker.models import Trade, Symbol
+from typing import List, Annotated
+from datetime import datetime
+from crypto_tracker.utils import to_datetime
+
+@service
 class BinanceAPIClient:
-    def __init__(self):
-        self.config = Config()
-        self.client = Spot(api_key=self.config.BINANCE_API_KEY, api_secret=self.config.BINANCE_API_SECRET_KEY)
+    def __init__(self, binance_spot_client: Annotated[Spot, Inject()]):
+        self.client = binance_spot_client
 
     def fetch_trades(self, symbol:Symbol, last_updated_on:datetime) -> List[Trade]:
         try:
