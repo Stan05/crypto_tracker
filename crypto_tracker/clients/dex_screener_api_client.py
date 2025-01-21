@@ -1,9 +1,16 @@
+from typing import Annotated
+
 import requests
+from wireup import service, Inject
+
 from crypto_tracker.configs.logger import Logger
 
+
+
+@service
 class DexScreenerApiClient:
-    def __init__(self):
-        self.logger = Logger()
+    def __init__(self, logger: Annotated[Logger, Inject()]):
+        self.logger = logger
 
     def fetch_by_chain_and_pair_id(self, chain_id:str, pair_id:str):
         try:
@@ -30,5 +37,5 @@ class DexScreenerApiClient:
                 return data['pairs']
             return None
         except Exception as e:
-            self.logger.error(f"Error fetching ticker price for {symbol}: {e}")
+            self.logger.error(f"Error fetching ticker price for {token_addr}: {e}")
             return None

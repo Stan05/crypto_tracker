@@ -20,6 +20,8 @@ pydantic = "^2.10.2"
 gql = "^3.5.0"
 beautifulsoup4 = "^4.12.3"
 wireup = "^0.15.1"
+pydantic-settings = "^2.7.1"
+eval-type-backport = "^0.2.2"
 
 [tool.poetry.scripts]
 update-trades = "crypto_tracker.__main__:update_trades"

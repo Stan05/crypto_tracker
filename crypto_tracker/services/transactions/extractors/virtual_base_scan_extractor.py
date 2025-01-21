@@ -1,7 +1,9 @@
+from wireup import service
+
 from crypto_tracker.models import Transaction, DexIdType, ChainIdType
 from crypto_tracker.services.transactions.transaction_extractor import TransactionExtractor
 
-
+@service
 class VirtualBaseScanExtractor(TransactionExtractor):
 
     def __init__(self):

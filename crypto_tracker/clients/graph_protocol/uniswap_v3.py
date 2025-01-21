@@ -1,8 +1,10 @@
 from datetime import datetime
-from typing import List, Type
+from typing import List, Type, Annotated
 from pydantic import BaseModel, Field
+from wireup import service, Inject
 
 from crypto_tracker.config import Config
+from crypto_tracker.configs.settings import Settings
 from crypto_tracker.models import Transaction, Swap, Token, TradeType
 from crypto_tracker.clients.graph_protocol.connector import GraphProtocolConnector
 
@@ -34,11 +36,11 @@ class GraphTransaction(BaseModel):
 class GraphResponse(BaseModel):
     transaction: GraphTransaction
 
+@service
 class GrtUniswapSwapV3Connector(GraphProtocolConnector[GraphResponse, Transaction]):
-    def __init__(self):
-        self.config = Config()
-        self.pooled_tokens: [str] = self.config.UNISWAP_POOLED_TOKENS
-        super().__init__(graphql_endpoint=self.config.GRAPH_UNISWAP_V3_URL)
+    def __init__(self, settings: Annotated[Settings, Inject()]):
+        self.pooled_tokens: [str] = settings.uniswap_pooled_tokens
+        super().__init__(graphql_endpoint=settings.graph_uniswap_v3_url)
 
     def get_query(self) -> str:
         return """

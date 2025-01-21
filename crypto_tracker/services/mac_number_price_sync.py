@@ -1,9 +1,14 @@
 import subprocess
 import time
 from dataclasses import dataclass
+from typing import Annotated
 
-from ..clients_manager import ClientsManager
+from wireup import service, Inject
+
+from ..clients.binance_api_client import BinanceAPIClient
+from ..clients.dex_screener_api_client import DexScreenerApiClient
 from crypto_tracker.configs.logger import Logger
+
 
 @dataclass
 class CoinMetadata:
@@ -22,10 +27,15 @@ class CoinMetadata:
             for field in self.__dataclass_fields__
         )
 
+@service
 class MacNumbersPriceSyncService:
-    def __init__(self):
-        self.clients_manager = ClientsManager()
-        self.logger = Logger()
+    def __init__(self,
+                 logger: Annotated[Logger, Inject()],
+                 dex_screener_api: Annotated[DexScreenerApiClient, Inject()],
+                 binance_api: Annotated[BinanceAPIClient, Inject()]):
+        self.dex_screener_api = dex_screener_api
+        self.binance_api = binance_api
+        self.logger = logger
 
     def update_memecoins_file(self):
         coin_metadata_list:[CoinMetadata] = self.fetch_symbols_from_memecoins()
@@ -33,9 +43,9 @@ class MacNumbersPriceSyncService:
         for coin_metadata in coin_metadata_list:
             if coin_metadata.is_complete():
                 self.logger.info(f"Fetching prices for {coin_metadata}")
-                current_price = self.clients_manager.dex_screener_api.fetch_by_chain_and_pair_id(coin_metadata.chain, coin_metadata.pair_address)
+                current_price = self.dex_screener_api.fetch_by_chain_and_pair_id(coin_metadata.chain, coin_metadata.pair_address)
                 if not current_price:
-                    pairs = self.clients_manager.dex_screener_api.fetch_by_token_address(coin_metadata.pair_address)
+                    pairs = self.dex_screener_api.fetch_by_token_address(coin_metadata.pair_address)
                     if pairs:
                         for pair in pairs:
                             if pair['chainId'] == coin_metadata.chain:
@@ -88,7 +98,7 @@ class MacNumbersPriceSyncService:
             try:
                 # Fetch price from API
                 self.logger.info(f"Fetching price for {symbol}...")
-                current_price = self.clients_manager.binance_api.fetch_current_price(symbol=f'{symbol}USDT')
+                current_price = self.binance_api.fetch_current_price(symbol=f'{symbol}USDT')
                 self.logger.info(f"Fetched price for {symbol}: {current_price}")
 
                 # Update price in corresponding row in column F

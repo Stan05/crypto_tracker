@@ -1,5 +1,7 @@
 # crypto_tracker/services/transaction_service.py
-from wireup import service
+from typing import Annotated
+
+from wireup import service, Inject
 
 from crypto_tracker.database import Database
 from crypto_tracker.configs.logger import Logger
@@ -13,13 +15,18 @@ from crypto_tracker.services.transactions.transaction_extractor_context import T
 
 @service
 class TransactionService:
-    def __init__(self):
+    def __init__(self,
+                 logger: Annotated[Logger, Inject()],
+                 token_service: Annotated[TokenService, Inject()],
+                 pair_service: Annotated[PairService, Inject()],
+                 trade_service: Annotated[TradeService, Inject()],
+                 transaction_extractor_context: Annotated[TransactionExtractorContext, Inject()]):
         self.db = Database()
-        self.logger = Logger()
-        self.token_service = TokenService()
-        self.pair_service = PairService()
-        self.trade_service = TradeService()
-        self.transaction_extractor_context = TransactionExtractorContext()
+        self.logger = logger
+        self.token_service = token_service
+        self.pair_service = pair_service
+        self.trade_service = trade_service
+        self.transaction_extractor_context = transaction_extractor_context
 
     def add_txn_if_not_exist(self, txn: TransactionORM) -> TransactionORM:
         existing_txn = self.db.transaction_repo.get_txn_by_hash(txn.hash)
@@ -36,7 +43,7 @@ class TransactionService:
         4. Add the trade
         """
         transaction: Transaction = self.transaction_extractor_context.extract(txn_hash, dex_id, chain_id)
-
+        return 1
         txn: TransactionORM = self.add_txn_if_not_exist(TransactionORM(
             hash=transaction.id,
             payload=transaction.payload,
