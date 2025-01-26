@@ -15,3 +15,20 @@ class PairRepository(BaseRepository[PairORM]):
 
     def get_pair_by_address(self, address: str) -> PairORM:
         return self.db_session.query(PairORM).filter(func.lower(PairORM.pair_address) == address.lower()).first()
+
+    def get_pair_by_symbol(self, symbol: str):
+        return (self.db_session.query(PairORM)
+                .filter(PairORM.symbol == symbol)
+                .first())
+
+    def create_with_ignore(self, pair: PairORM) -> PairORM:
+
+        try:
+            self.db_session.add(pair)
+            self.db_session.commit()
+            self.db_session.refresh(pair)
+            return pair
+        except Exception as e:
+            print(f"Exception while creating pair {e}")
+            self.db_session.rollback()
+            return self.get_pair_by_symbol(pair.symbol)

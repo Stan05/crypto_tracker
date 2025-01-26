@@ -29,7 +29,7 @@ class PairService:
         existing_pair = self.pair_repo.get_pair_by_address(pair.pair_address)
         if not existing_pair:
             self.logger.info(f'Pair {pair.symbol} does not exist creating it')
-            return self.pair_repo.create(pair)
+            return self.pair_repo.create_with_ignore(pair)
         return existing_pair
 
     def get_pairs(self) -> [PairORM]:

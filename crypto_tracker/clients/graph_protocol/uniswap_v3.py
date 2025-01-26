@@ -89,7 +89,13 @@ class GrtUniswapSwapV3Connector(GraphProtocolConnector[GraphResponse, Transactio
         Returns:
             Transaction: The internal Transaction model instance.
         """
-        graph_swap:GraphSwap = response.transaction.swaps[0]
+        for temp_swap in response.transaction.swaps:
+            if self.pooled_tokens.__contains__(temp_swap.base_token.symbol) and self.pooled_tokens.__contains__(temp_swap.quote_token.symbol):
+                continue
+            graph_swap = temp_swap
+
+        if graph_swap is None:
+            raise Exception("Could not resolve swap between non-pooled tokens")
 
         if self.pooled_tokens.__contains__(graph_swap.base_token.symbol):
             base_token = Token(
