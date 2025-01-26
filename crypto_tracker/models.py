@@ -3,6 +3,8 @@
 from datetime import datetime
 from enum import Enum
 
+from pydantic import BaseModel
+
 
 #### Domain
 
@@ -91,45 +93,26 @@ class TransactionResponseType(BaseEnum):
     GRT_UNISWAP_V3_BASE = "Base.Uniswap-V3.Subgraph"
     KYBERSWAP_BASE = "KyberSwap.Subgraph"
 
-class Token:
-    def __init__(self, address, name, symbol):
-        self.address:str = address
-        self.name:str = name
-        self.symbol:str = symbol
+class Token(BaseModel):
+    address: str
+    name: str
+    symbol: str
 
-    def __repr__(self):
-        return f"Token(address={self.address!r}, name={self.name!r}, symbol={self.symbol!r})"
+class Swap(BaseModel):
+    base_token_amount: float
+    quote_token_amount: float
+    amount_USD: float
+    origin: str
+    base_token: Token
+    quote_token: Token
+    timestamp: datetime
+    pool_id: str
+    trade_type: TradeType
 
-
-class Swap:
-    def __init__(self, base_token_amount, quote_token_amount, amount_USD, origin, base_token, quote_token, timestamp, pool_id,
-                 trade_type):
-        self.base_token_amount:float = base_token_amount
-        self.quote_token_amount:float = quote_token_amount
-        self.amount_USD:float = amount_USD
-        self.origin: str = origin
-        self.base_token: Token = base_token
-        self.trade_type: TradeType = trade_type
-        self.quote_token: Token = quote_token
-        self.timestamp: datetime = timestamp
-        self.pool_id: str = pool_id
-
-    def __repr__(self):
-        return (
-            f"Swap(base_token_amount={self.base_token_amount!r}, quote_token_amount={self.quote_token_amount!r}, "
-            f"amount_USD={self.amount_USD!r}, origin={self.origin!r}, base_token={self.base_token!r}, "
-            f"quote_token={self.quote_token!r}, timestamp={self.timestamp!r}, pool_id={self.pool_id!r}, "
-            f"trade_type={self.trade_type!r})"
-        )
-
-class Transaction:
-    def __init__(self, id, swap, payload):
-        self.id: str = id
-        self.swap: Swap = swap
-        self.payload = payload
-
-    def __repr__(self):
-        return f"Transaction(id={self.id!r}, swap={self.swap!r}, payload={self.payload!r})"
+class Transaction(BaseModel):
+    id: str
+    swap: Swap
+    payload: dict
 
 class AggregatedTrade:
     def __init__(self, pair_id, pair, total_buy_quantity, total_buy_native_value, total_buy_usd_value,

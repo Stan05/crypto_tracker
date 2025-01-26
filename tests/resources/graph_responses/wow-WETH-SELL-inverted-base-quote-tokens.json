@@ -1,0 +1,51 @@
+{
+  "transaction": {
+    "id": "0x5da30b21ce36139207fe04c32c740d6f14de3057bd6153fbf1580e507e567522",
+    "swaps": [
+      {
+        "amount0": "-0.003332215207333547",
+        "amount1": "3825",
+        "amountUSD": "11.83452649684081472335942030314523",
+        "origin": "0xXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+        "pool": {
+          "id": "0x2007255830b907533fd615a038e2735840c0003f",
+          "token0Price": "0.00000003189529286469841512754764868889085",
+          "token1Price": "31352588.7422340013204602900236293"
+        },
+        "timestamp": "1732721729",
+        "token0": {
+          "id": "0x4200000000000000000000000000000000000006",
+          "name": "Wrapped Ether",
+          "symbol": "WETH"
+        },
+        "token1": {
+          "id": "0x8216e8143902a8fe0b676006bc25eb23829c123d",
+          "name": "wow",
+          "symbol": "wow"
+        }
+      },
+      {
+        "amount0": "0.003332215207333547",
+        "amount1": "-11.834853",
+        "amountUSD": "11.83452649684081472335942030314523",
+        "origin": "0xXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+        "pool": {
+          "id": "0xd0b53d9277642d899df5c87a3966a349a798f224",
+          "token0Price": "0.0003028724481526270022969002095582932",
+          "token1Price": "3301.719935568613965870701927699639"
+        },
+        "timestamp": "1732721729",
+        "token0": {
+          "id": "0x4200000000000000000000000000000000000006",
+          "name": "Wrapped Ether",
+          "symbol": "WETH"
+        },
+        "token1": {
+          "id": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+          "name": "USD Coin",
+          "symbol": "USDC"
+        }
+      }
+    ]
+  }
+}

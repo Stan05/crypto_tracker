@@ -1,0 +1,23 @@
+{
+  "id": "0x0933b4c5c92adc89508d6e099a02ecc50db5d05a63361434de5d186ad799da23",
+  "swap": {
+    "base_token_amount": -2879.240807681653435975,
+    "quote_token_amount": 0.009028704693775735,
+    "amount_USD": 29.97014810146088405156758425313037,
+    "origin": "0xXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+    "base_token": {
+      "address": "0x0db510e79909666d6dec7f5e49370838c16d950f",
+      "name": "Super Anon",
+      "symbol": "ANON"
+    },
+    "quote_token": {
+      "address": "0x4200000000000000000000000000000000000006",
+      "name": "Wrapped Ether",
+      "symbol": "WETH"
+    },
+    "timestamp": "2024-11-22T06:22:43Z",
+    "pool_id": "0x566576e141a5cd18a91f64dd00094b9bd10b74b9",
+    "trade_type": "buy"
+  },
+  "payload": {}
+}

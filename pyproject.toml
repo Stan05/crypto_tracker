@@ -27,6 +27,21 @@ eval-type-backport = "^0.2.2"
 update-trades = "crypto_tracker.__main__:update_trades"
 calculate-pnl = "crypto_tracker.__main__:calculate_pnl"
 
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.4"
+pytest-asyncio = "^0.25.2"
+requests-mock = "^1.12.1"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+addopts = "--strict-markers"
+markers = [
+    "unit: mark a test as a unit test",
+    "integration: mark a test as an integration test",
+    "asyncio: mark a test as asyncio-based"
+]
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetrypoe.core.masonry.api"

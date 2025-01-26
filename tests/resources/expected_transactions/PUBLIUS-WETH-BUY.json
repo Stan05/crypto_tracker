@@ -1,0 +1,23 @@
+{
+  "id": "0xc2f463265f091fb350806b5d7820179911e1beb53797e1a3a539480d246541a4",
+  "swap": {
+    "base_token_amount": -12374.947250535801829816,
+    "quote_token_amount": 0.002966504964433535,
+    "amount_USD": 9.99503816474566776892041637170916,
+    "origin": "0xXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+    "base_token": {
+      "address": "0x3512208ea82a7df9affb5ed07f3cbb9d7deb7418",
+      "name": "PUBLIUS",
+      "symbol": "PUBLIUS"
+    },
+    "quote_token": {
+      "address": "0x4200000000000000000000000000000000000006",
+      "name": "Wrapped Ether",
+      "symbol": "WETH"
+    },
+    "timestamp": "2024-11-22T06:22:43Z",
+    "pool_id": "0x6cbcc650ac3d287bad441f8fcce19ab9cd66c3d5",
+    "trade_type": "buy"
+  },
+  "payload": {}
+}

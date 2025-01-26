@@ -7,7 +7,7 @@ from pydantic import BaseModel
 
 # Define a generic type for the response model
 T = TypeVar("T", bound=BaseModel)
-K = TypeVar("K")
+K = TypeVar("K", bound=BaseModel)
 
 class GraphProtocolConnector(ABC, Generic[T, K]):
     def __init__(self, graphql_endpoint: str):

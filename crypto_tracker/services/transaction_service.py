@@ -35,7 +35,7 @@ class TransactionService:
     def add_txn_if_not_exist(self, txn: TransactionORM) -> TransactionORM:
         existing_txn = self.transaction_repo.get_txn_by_hash(txn.hash)
         if not existing_txn:
-            self.logger.info(f'Trade {txn.hash} does not exist creating it')
+            self.logger.info(f'Transaction {txn.hash} does not exist creating it')
             return self.transaction_repo.create(txn)
         return existing_txn
 

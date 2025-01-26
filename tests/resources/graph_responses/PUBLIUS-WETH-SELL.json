@@ -1,0 +1,51 @@
+{
+  "transaction": {
+      "id": "0xb02ece83b437f4facda486dd76772fa056ba4a49a7d3a9b086bc593692de5779",
+      "swaps": [
+        {
+          "amount0": "4000",
+          "amount1": "-0.003483593523699734",
+          "amountUSD": "11.41691312701224449295696378823558",
+          "origin": "0xXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+          "pool": {
+            "id": "0x6cbcc650ac3d287bad441f8fcce19ab9cd66c3d5",
+            "token0Price": "44107726.30339773692876744579673371",
+            "token1Price": "0.00000002267176487678004175966403717619395"
+          },
+          "timestamp": "1732282981",
+          "token0": {
+            "id": "0x3512208ea82a7df9affb5ed07f3cbb9d7deb7418",
+            "name": "PUBLIUS",
+            "symbol": "PUBLIUS"
+          },
+          "token1": {
+            "id": "0x4200000000000000000000000000000000000006",
+            "name": "Wrapped Ether",
+            "symbol": "WETH"
+          }
+        },
+        {
+          "amount0": "0.003483593523699734",
+          "amount1": "-11.40839",
+          "amountUSD": "11.41691312701224449295696378823558",
+          "origin": "0xXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+          "pool": {
+            "id": "0xd0b53d9277642d899df5c87a3966a349a798f224",
+            "token0Price": "0.000302203076836770285840872984779204",
+            "token1Price": "3309.033152366388829336243457997864"
+          },
+          "timestamp": "1732282981",
+          "token0": {
+            "id": "0x4200000000000000000000000000000000000006",
+            "name": "Wrapped Ether",
+            "symbol": "WETH"
+          },
+          "token1": {
+            "id": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+            "name": "USD Coin",
+            "symbol": "USDC"
+          }
+        }
+      ]
+    }
+}
